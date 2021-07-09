@@ -1,0 +1,407 @@
+import { Request, Response } from 'express';
+import { Between, getCustomRepository, Like } from 'typeorm';
+import * as Yup from 'yup';
+
+import estimateView from '../views/estimateView';
+import { EstimatesRepository } from '../repositories/EstimatesRepository';
+import { UsersRepository } from '../repositories/UsersRepository';
+import UsersRolesController from './UsersRolesController';
+import EstimatesModel from '../models/EstimatesModel';
+
+export default {
+    async index(request: Request, response: Response) {
+        const { user_id } = request.params;
+        const { start, end, limit = 10, page = 1, name, user } = request.query;
+
+        if (! await UsersRolesController.can(user_id, "estimates", "view"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        const estimatesRepository = getCustomRepository(EstimatesRepository);
+
+        let estimates: EstimatesModel[] = [];
+
+        if (start && end) {
+            estimates = await estimatesRepository.find({
+                where: { updated_at: Between(start, end) },
+                relations: [
+                    'status',
+                ],
+                order: {
+                    updated_at: "DESC"
+                },
+                take: Number(limit),
+                skip: ((Number(page) - 1) * Number(limit)),
+            });
+
+            const totalPages = Math.ceil(estimates.length / Number(limit));
+
+            response.header('X-Total-Pages', String(totalPages));
+
+            return response.json(estimateView.renderMany(estimates));
+        }
+
+        if (name) {
+            estimates = await estimatesRepository.find({
+                where: { name: Like(`%${name}%`) },
+                relations: [
+                    'status',
+                ],
+                order: {
+                    created_at: "DESC"
+                },
+                take: Number(limit),
+                skip: ((Number(page) - 1) * Number(limit)),
+            });
+        }
+
+        if (user) {
+            estimates = await estimatesRepository.find({
+                where: { user: Like(`%${user}%`) },
+                relations: [
+                    'status',
+                ],
+                order: {
+                    updated_at: "DESC"
+                },
+                take: Number(limit),
+                skip: ((Number(page) - 1) * Number(limit)),
+            });
+        }
+
+        const totalPages = Math.ceil(estimates.length / Number(limit));
+
+        response.header('X-Total-Pages', String(totalPages));
+
+        return response.json(estimateView.renderMany(estimates));
+    },
+
+    async show(request: Request, response: Response) {
+        const { id, user_id } = request.params;
+
+        if (! await UsersRolesController.can(user_id, "estimates", "view"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        const estimatesRepository = getCustomRepository(EstimatesRepository);
+
+        const estimate = await estimatesRepository.findOneOrFail(id, {
+            relations: [
+                'status',
+            ]
+        });
+
+        return response.json(estimateView.render(estimate));
+    },
+
+    async create(request: Request, response: Response) {
+        const { user_id } = request.params;
+
+        if (! await UsersRolesController.can(user_id, "estimates", "create"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        const {
+            customer,
+            document,
+            phone,
+            cellphone,
+            contacts,
+            email,
+            address,
+            city,
+            state,
+            energy_company,
+            unity,
+            kwh,
+            irradiation,
+            month_01,
+            month_02,
+            month_03,
+            month_04,
+            month_05,
+            month_06,
+            month_07,
+            month_08,
+            month_09,
+            month_10,
+            month_11,
+            month_12,
+            month_13,
+            average_increase,
+            discount,
+            increase,
+            percent,
+            show_values,
+            show_discount,
+            notes,
+            created_at,
+            updated_at,
+            panel,
+            roof_orientation,
+            roof_type,
+            status
+        } = request.body;
+
+        const estimatesRepository = getCustomRepository(EstimatesRepository);
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id);
+
+        const data = {
+            customer,
+            document,
+            phone,
+            cellphone,
+            contacts,
+            email,
+            address,
+            city,
+            state,
+            energy_company,
+            unity,
+            kwh,
+            irradiation,
+            month_01,
+            month_02,
+            month_03,
+            month_04,
+            month_05,
+            month_06,
+            month_07,
+            month_08,
+            month_09,
+            month_10,
+            month_11,
+            month_12,
+            month_13,
+            average_increase,
+            discount,
+            increase,
+            percent,
+            show_values,
+            show_discount,
+            notes,
+            created_by: userCreator.name,
+            created_at,
+            updated_by: userCreator.name,
+            updated_at,
+            user: userCreator,
+            panel,
+            roof_orientation,
+            roof_type,
+            status
+        };
+
+        const schema = Yup.object().shape({
+            customer: Yup.string().required(),
+            document: Yup.string().required(),
+            phone: Yup.string().notRequired(),
+            cellphone: Yup.string().notRequired().nullable(),
+            contacts: Yup.string().notRequired().nullable(),
+            email: Yup.string().notRequired().nullable(),
+            address: Yup.string().notRequired().nullable(),
+            city: Yup.string().required(),
+            state: Yup.string().required(),
+            energy_company: Yup.string().required(),
+            unity: Yup.string().required(),
+            kwh: Yup.number().required(),
+            irradiation: Yup.number().required(),
+            month_01: Yup.number().required(),
+            month_02: Yup.number().required(),
+            month_03: Yup.number().required(),
+            month_04: Yup.number().required(),
+            month_05: Yup.number().required(),
+            month_06: Yup.number().required(),
+            month_07: Yup.number().required(),
+            month_08: Yup.number().required(),
+            month_09: Yup.number().required(),
+            month_10: Yup.number().required(),
+            month_11: Yup.number().required(),
+            month_12: Yup.number().required(),
+            month_13: Yup.number().required(),
+            average_increase: Yup.number().required(),
+            discount: Yup.number().required(),
+            increase: Yup.number().required(),
+            percent: Yup.boolean().notRequired(),
+            show_values: Yup.boolean().notRequired(),
+            show_discount: Yup.boolean().notRequired(),
+            notes: Yup.string().notRequired().nullable(),
+            created_by: Yup.string().required(),
+            updated_by: Yup.string().required(),
+            user: Yup.string().notRequired().nullable(),
+            panel: Yup.string().required(),
+            roof_orientation: Yup.string().required(),
+            roof_type: Yup.string().required(),
+            status: Yup.string().required(),
+        });
+
+        await schema.validate(data, {
+            abortEarly: false,
+        });
+
+        const estimate = estimatesRepository.create(data);
+
+        await estimatesRepository.save(estimate);
+
+        return response.status(201).json(estimateView.render(estimate));
+    },
+
+    async update(request: Request, response: Response) {
+        const { id, user_id } = request.params;
+
+        if (! await UsersRolesController.can(user_id, "estimates", "update"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        const {
+            customer,
+            document,
+            phone,
+            cellphone,
+            contacts,
+            email,
+            address,
+            city,
+            state,
+            energy_company,
+            unity,
+            kwh,
+            irradiation,
+            month_01,
+            month_02,
+            month_03,
+            month_04,
+            month_05,
+            month_06,
+            month_07,
+            month_08,
+            month_09,
+            month_10,
+            month_11,
+            month_12,
+            month_13,
+            average_increase,
+            discount,
+            increase,
+            percent,
+            show_values,
+            show_discount,
+            notes,
+            panel,
+            roof_orientation,
+            roof_type,
+            status
+        } = request.body;
+
+        const estimatesRepository = getCustomRepository(EstimatesRepository);
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id);
+
+        const data = {
+            customer,
+            document,
+            phone,
+            cellphone,
+            contacts,
+            email,
+            address,
+            city,
+            state,
+            energy_company,
+            unity,
+            kwh,
+            irradiation,
+            month_01,
+            month_02,
+            month_03,
+            month_04,
+            month_05,
+            month_06,
+            month_07,
+            month_08,
+            month_09,
+            month_10,
+            month_11,
+            month_12,
+            month_13,
+            average_increase,
+            discount,
+            increase,
+            percent,
+            show_values,
+            show_discount,
+            notes,
+            updated_by: userCreator.name,
+            updated_at: new Date(),
+            panel,
+            roof_orientation,
+            roof_type,
+            status
+        };
+
+        const schema = Yup.object().shape({
+            customer: Yup.string().required(),
+            document: Yup.string().required(),
+            phone: Yup.string().notRequired(),
+            cellphone: Yup.string().notRequired().nullable(),
+            contacts: Yup.string().notRequired().nullable(),
+            email: Yup.string().notRequired().nullable(),
+            address: Yup.string().notRequired().nullable(),
+            city: Yup.string().required(),
+            state: Yup.string().required(),
+            energy_company: Yup.string().required(),
+            unity: Yup.string().required(),
+            kwh: Yup.number().required(),
+            irradiation: Yup.number().required(),
+            month_01: Yup.number().required(),
+            month_02: Yup.number().required(),
+            month_03: Yup.number().required(),
+            month_04: Yup.number().required(),
+            month_05: Yup.number().required(),
+            month_06: Yup.number().required(),
+            month_07: Yup.number().required(),
+            month_08: Yup.number().required(),
+            month_09: Yup.number().required(),
+            month_10: Yup.number().required(),
+            month_11: Yup.number().required(),
+            month_12: Yup.number().required(),
+            month_13: Yup.number().required(),
+            average_increase: Yup.number().required(),
+            discount: Yup.number().required(),
+            increase: Yup.number().required(),
+            percent: Yup.boolean().notRequired(),
+            show_values: Yup.boolean().notRequired(),
+            show_discount: Yup.boolean().notRequired(),
+            notes: Yup.string().notRequired().nullable(),
+            updated_by: Yup.string().required(),
+            updated_at: Yup.date().required(),
+            panel: Yup.string().required(),
+            roof_orientation: Yup.string().required(),
+            roof_type: Yup.string().required(),
+            status: Yup.string().required(),
+        });
+
+        await schema.validate(data, {
+            abortEarly: false,
+        });
+
+        const estimate = estimatesRepository.create(data);
+
+        await estimatesRepository.update(id, estimate);
+
+        return response.status(204).json();
+    },
+
+    async delete(request: Request, response: Response) {
+        const { id, user_id } = request.params;
+
+        if (! await UsersRolesController.can(user_id, "estimates", "remove"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        const estimatesRepository = getCustomRepository(EstimatesRepository);
+
+        await estimatesRepository.delete(id);
+
+        return response.status(204).send();
+    }
+}
