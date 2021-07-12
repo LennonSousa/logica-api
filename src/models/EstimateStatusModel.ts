@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 't
 
 import Estimate from './EstimatesModel';
 
-@Entity('roof_orientations')
+@Entity('estimate_status')
 export default class EstimateStatusModel {
     @PrimaryGeneratedColumn('uuid')
     readonly id: string;

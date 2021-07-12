@@ -10,6 +10,9 @@ export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
 
+        if (! await UsersRolesController.can(user_id, "estimates", "view"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
         const panelPricesRepository = getCustomRepository(PanelPricesRepository);
 
         const panelPrices = await panelPricesRepository.find({
@@ -24,6 +27,9 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
+        if (! await UsersRolesController.can(user_id, "estimates", "view"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
         const panelPricesRepository = getCustomRepository(PanelPricesRepository);
 
         const panelPrices = await panelPricesRepository.findOneOrFail(id);
@@ -34,27 +40,30 @@ export default {
     async create(request: Request, response: Response) {
         const { user_id } = request.params;
 
+        if (! await UsersRolesController.can(user_id, "estimates", "create"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
         const {
-            name,
             potency,
             price,
             inversor,
+            panel,
         } = request.body;
 
         const panelPricesRepository = getCustomRepository(PanelPricesRepository);
 
         const data = {
-            name,
             potency,
             price,
             inversor,
+            panel,
         };
 
         const schema = Yup.object().shape({
-            name: Yup.string().required(),
             potency: Yup.number().notRequired(),
             price: Yup.number().notRequired(),
-            inversor: Yup.number().required(),
+            inversor: Yup.string().required(),
+            panel: Yup.string().required(),
         });
 
         await schema.validate(data, {
@@ -71,8 +80,10 @@ export default {
     async update(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
+        if (! await UsersRolesController.can(user_id, "estimates", "update"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
         const {
-            name,
             potency,
             price,
             inversor,
@@ -81,17 +92,15 @@ export default {
         const panelPricesRepository = getCustomRepository(PanelPricesRepository);
 
         const data = {
-            name,
             potency,
             price,
             inversor,
         };
 
         const schema = Yup.object().shape({
-            name: Yup.string().required(),
             potency: Yup.number().notRequired(),
-            price: Yup.boolean().notRequired(),
-            inversor: Yup.number().required(),
+            price: Yup.number().notRequired(),
+            inversor: Yup.string().required(),
         });
 
         await schema.validate(data, {
@@ -107,6 +116,9 @@ export default {
 
     async delete(request: Request, response: Response) {
         const { id, user_id } = request.params;
+
+        if (! await UsersRolesController.can(user_id, "estimates", "remove"))
+            return response.status(403).send({ error: 'User permission not granted!' });
 
         const panelPricesRepository = getCustomRepository(PanelPricesRepository);
 

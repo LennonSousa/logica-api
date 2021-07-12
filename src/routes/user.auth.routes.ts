@@ -27,7 +27,7 @@ userAuthRoutes.put('/users/reset/:id', usersAuthMiddleware, UsersResetsControlle
 
 userAuthRoutes.get('/users', usersAuthMiddleware, UsersController.index);
 userAuthRoutes.get('/users/:id', usersAuthMiddleware, UsersController.show);
-userAuthRoutes.post('/users', usersAuthMiddleware, UsersController.create);
+userAuthRoutes.post('/users', UsersController.create);
 userAuthRoutes.put('/users/:id', usersAuthMiddleware, UsersController.update);
 userAuthRoutes.delete('/users/:id', usersAuthMiddleware, UsersController.delete);
 
@@ -48,29 +48,29 @@ userAuthRoutes.post('/estimates', usersAuthMiddleware, EstimatesController.creat
 userAuthRoutes.put('/estimates/:id', usersAuthMiddleware, EstimatesController.update);
 userAuthRoutes.delete('/estimates/:id', usersAuthMiddleware, EstimatesController.delete);
 
-userAuthRoutes.get('panels/prices', usersAuthMiddleware, PanelPricesController.index);
-userAuthRoutes.get('panels/prices/:id', usersAuthMiddleware, PanelPricesController.show);
-userAuthRoutes.post('panels/prices', usersAuthMiddleware, PanelPricesController.create);
-userAuthRoutes.put('panels/prices/:id', usersAuthMiddleware, PanelPricesController.update);
-userAuthRoutes.delete('panels/prices/:id', usersAuthMiddleware, PanelPricesController.delete);
+userAuthRoutes.get('/panels/prices', usersAuthMiddleware, PanelPricesController.index);
+userAuthRoutes.get('/panels/prices/:id', usersAuthMiddleware, PanelPricesController.show);
+userAuthRoutes.post('/panels/prices', usersAuthMiddleware, PanelPricesController.create);
+userAuthRoutes.put('/panels/prices/:id', usersAuthMiddleware, PanelPricesController.update);
+userAuthRoutes.delete('/panels/prices/:id', usersAuthMiddleware, PanelPricesController.delete);
 
-userAuthRoutes.get('panels', usersAuthMiddleware, PanelsController.index);
-userAuthRoutes.get('panels/:id', usersAuthMiddleware, PanelsController.show);
-userAuthRoutes.post('panels', usersAuthMiddleware, PanelsController.create);
-userAuthRoutes.put('panels/:id', usersAuthMiddleware, PanelsController.update);
-userAuthRoutes.delete('panels/:id', usersAuthMiddleware, PanelsController.delete);
+userAuthRoutes.get('/panels', usersAuthMiddleware, PanelsController.index);
+userAuthRoutes.get('/panels/:id', usersAuthMiddleware, PanelsController.show);
+userAuthRoutes.post('/panels', usersAuthMiddleware, PanelsController.create);
+userAuthRoutes.put('/panels/:id', usersAuthMiddleware, PanelsController.update);
+userAuthRoutes.delete('/panels/:id', usersAuthMiddleware, PanelsController.delete);
 
-userAuthRoutes.get('roofs/orientations', usersAuthMiddleware, RoofOrientationsController.index);
-userAuthRoutes.get('roofs/orientations/:id', usersAuthMiddleware, RoofOrientationsController.show);
-userAuthRoutes.post('roofs/orientations', usersAuthMiddleware, RoofOrientationsController.create);
-userAuthRoutes.put('roofs/orientations/:id', usersAuthMiddleware, RoofOrientationsController.update);
-userAuthRoutes.delete('roofs/orientations/:id', usersAuthMiddleware, RoofOrientationsController.delete);
+userAuthRoutes.get('/roofs/orientations', usersAuthMiddleware, RoofOrientationsController.index);
+userAuthRoutes.get('/roofs/orientations/:id', usersAuthMiddleware, RoofOrientationsController.show);
+userAuthRoutes.post('/roofs/orientations', usersAuthMiddleware, RoofOrientationsController.create);
+userAuthRoutes.put('/roofs/orientations/:id', usersAuthMiddleware, RoofOrientationsController.update);
+userAuthRoutes.delete('/roofs/orientations/:id', usersAuthMiddleware, RoofOrientationsController.delete);
 
-userAuthRoutes.get('roofs/types', usersAuthMiddleware, RoofTypesController.index);
-userAuthRoutes.get('roofs/types/:id', usersAuthMiddleware, RoofTypesController.show);
-userAuthRoutes.post('roofs/types', usersAuthMiddleware, RoofTypesController.create);
-userAuthRoutes.put('roofs/types/:id', usersAuthMiddleware, RoofTypesController.update);
-userAuthRoutes.delete('roofs/types/:id', usersAuthMiddleware, RoofTypesController.delete);
+userAuthRoutes.get('/roofs/types', usersAuthMiddleware, RoofTypesController.index);
+userAuthRoutes.get('/roofs/types/:id', usersAuthMiddleware, RoofTypesController.show);
+userAuthRoutes.post('/roofs/types', usersAuthMiddleware, RoofTypesController.create);
+userAuthRoutes.put('/roofs/types/:id', usersAuthMiddleware, RoofTypesController.update);
+userAuthRoutes.delete('/roofs/types/:id', usersAuthMiddleware, RoofTypesController.delete);
 
 userAuthRoutes.get('/store', usersAuthMiddleware, StoreController.show);
 userAuthRoutes.put('/store/:id', usersAuthMiddleware, UploadsConfig('store').single('avatar'), StoreController.update);

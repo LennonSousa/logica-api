@@ -5,7 +5,6 @@ export default {
     render(panelPrice: PanelPrice) {
         return {
             id: panelPrice.id,
-            name: panelPrice.name,
             potency: panelPrice.potency,
             price: panelPrice.price,
             inversor: panelPrice.inversor,

@@ -7,8 +7,6 @@ import jwt from 'jsonwebtoken';
 
 import UsersModel from '../models/UsersModel';
 import userView from '../views/userView';
-import { UsersRepository } from '../repositories/UsersRepository';
-import UsersRolesController from './UsersRolesController';
 
 require('dotenv/config');
 
@@ -41,7 +39,6 @@ export default {
             ],
             relations: [
                 'roles',
-                'notifications',
             ]
         });
 

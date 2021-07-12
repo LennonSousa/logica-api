@@ -48,17 +48,33 @@ export class createEstimates1625834863810 implements MigrationInterface {
                         isNullable: true,
                     },
                     {
-                        name: 'address',
+                        name: 'zip_code',
+                        type: 'varchar'
+                    },
+                    {
+                        name: 'street',
+                        type: 'varchar'
+                    },
+                    {
+                        name: 'number',
+                        type: 'varchar'
+                    },
+                    {
+                        name: 'neighborhood',
+                        type: 'varchar'
+                    },
+                    {
+                        name: 'complement',
                         type: 'varchar',
-                        isNullable: true,
+                        isNullable: true
                     },
                     {
                         name: 'city',
-                        type: 'varchar',
+                        type: 'varchar'
                     },
                     {
                         name: 'state',
-                        type: 'varchar',
+                        type: 'varchar'
                     },
                     {
                         name: 'energy_company',

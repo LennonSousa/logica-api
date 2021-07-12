@@ -28,7 +28,7 @@ export default class UsersModel {
     paused: boolean;
 
     @Column()
-    sudo: boolean;
+    root: boolean;
 
     @Column()
     created_at: Date;

@@ -8,9 +8,6 @@ export default class PanelPricesModel {
     readonly id: string;
 
     @Column()
-    name: string;
-
-    @Column()
     potency: number;
 
     @Column()
