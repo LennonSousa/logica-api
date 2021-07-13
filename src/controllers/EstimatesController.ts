@@ -141,7 +141,8 @@ export default {
             panel,
             roof_orientation,
             roof_type,
-            status
+            status,
+            items,
         } = request.body;
 
         const estimatesRepository = getCustomRepository(EstimatesRepository);
@@ -196,7 +197,8 @@ export default {
             panel,
             roof_orientation,
             roof_type,
-            status
+            status,
+            items,
         };
 
         const schema = Yup.object().shape({
@@ -213,8 +215,8 @@ export default {
             complement: Yup.string().notRequired().nullable(),
             city: Yup.string().required(),
             state: Yup.string().required(),
-            energy_company: Yup.string().required(),
-            unity: Yup.string().required(),
+            energy_company: Yup.string().notRequired(),
+            unity: Yup.string().notRequired(),
             kwh: Yup.number().required(),
             irradiation: Yup.number().required(),
             month_01: Yup.number().required(),
@@ -244,6 +246,14 @@ export default {
             roof_orientation: Yup.string().required(),
             roof_type: Yup.string().required(),
             status: Yup.string().required(),
+            items: Yup.array(
+                Yup.object().shape({
+                    name: Yup.string().required(),
+                    amount: Yup.number().required(),
+                    price: Yup.number().required(),
+                    order: Yup.number().required(),
+                })
+            ),
         });
 
         await schema.validate(data, {
@@ -373,8 +383,8 @@ export default {
             complement: Yup.string().notRequired().nullable(),
             city: Yup.string().required(),
             state: Yup.string().required(),
-            energy_company: Yup.string().required(),
-            unity: Yup.string().required(),
+            energy_company: Yup.string().notRequired(),
+            unity: Yup.string().notRequired(),
             kwh: Yup.number().required(),
             irradiation: Yup.number().required(),
             month_01: Yup.number().required(),

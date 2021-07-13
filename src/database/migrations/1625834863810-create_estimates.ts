@@ -79,10 +79,12 @@ export class createEstimates1625834863810 implements MigrationInterface {
                     {
                         name: 'energy_company',
                         type: 'varchar',
+                        isNullable: true,
                     },
                     {
                         name: 'unity',
                         type: 'varchar',
+                        isNullable: true,
                     },
                     {
                         name: 'kwh',

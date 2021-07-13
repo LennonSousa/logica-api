@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { getCustomRepository } from 'typeorm';
 import * as Yup from 'yup';
 
-import panelView from '../views/panelView';
-import { PanelsRepository } from '../repositories/PanelsRepository';
+import estimateItemView from '../views/estimateItemView';
+import { EstimateItemsRepository } from '../repositories/EstimateItemsRepository';
 import UsersRolesController from './UsersRolesController';
 
 export default {
@@ -13,18 +13,15 @@ export default {
         if (! await UsersRolesController.can(user_id, "estimates", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
-        const panelsRepository = getCustomRepository(PanelsRepository);
+        const estimateItemsRepository = getCustomRepository(EstimateItemsRepository);
 
-        const panels = await panelsRepository.find({
+        const estimateItems = await estimateItemsRepository.find({
             order: {
                 order: "ASC"
-            },
-            relations: [
-                'prices'
-            ]
+            }
         });
 
-        return response.json(panelView.renderMany(panels));
+        return response.json(estimateItemView.renderMany(estimateItems));
     },
 
     async show(request: Request, response: Response) {
@@ -33,15 +30,11 @@ export default {
         if (! await UsersRolesController.can(user_id, "estimates", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
-        const panelsRepository = getCustomRepository(PanelsRepository);
+        const estimateItemsRepository = getCustomRepository(EstimateItemsRepository);
 
-        const panels = await panelsRepository.findOneOrFail(id, {
-            relations: [
-                'prices'
-            ]
-        });
+        const estimateItems = await estimateItemsRepository.findOneOrFail(id);
 
-        return response.json(panelView.render(panels));
+        return response.json(estimateItemView.render(estimateItems));
     },
 
     async create(request: Request, response: Response) {
@@ -52,36 +45,39 @@ export default {
 
         const {
             name,
-            capacity,
-            paused,
+            amount,
+            price,
             order,
+            estimate,
         } = request.body;
 
-        const panelsRepository = getCustomRepository(PanelsRepository);
+        const estimateItemsRepository = getCustomRepository(EstimateItemsRepository);
 
         const data = {
             name,
-            capacity,
-            paused,
+            amount,
+            price,
             order,
+            estimate,
         };
 
         const schema = Yup.object().shape({
             name: Yup.string().required(),
-            capacity: Yup.number().notRequired(),
-            paused: Yup.boolean().notRequired(),
+            amount: Yup.number().required(),
+            price: Yup.number().required(),
             order: Yup.number().required(),
+            estimate: Yup.string().required(),
         });
 
         await schema.validate(data, {
             abortEarly: false,
         });
 
-        const panel = panelsRepository.create(data);
+        const estimateItems = estimateItemsRepository.create(data);
 
-        await panelsRepository.save(panel);
+        await estimateItemsRepository.save(estimateItems);
 
-        return response.status(201).json(panelView.render(panel));
+        return response.status(201).json(estimateItemView.render(estimateItems));
     },
 
     async update(request: Request, response: Response) {
@@ -92,24 +88,24 @@ export default {
 
         const {
             name,
-            capacity,
-            paused,
+            amount,
+            price,
             order,
         } = request.body;
 
-        const panelsRepository = getCustomRepository(PanelsRepository);
+        const estimateItemsRepository = getCustomRepository(EstimateItemsRepository);
 
         const data = {
             name,
-            capacity,
-            paused,
+            amount,
+            price,
             order,
         };
 
         const schema = Yup.object().shape({
             name: Yup.string().required(),
-            capacity: Yup.number().notRequired(),
-            paused: Yup.boolean().notRequired(),
+            amount: Yup.number().required(),
+            price: Yup.number().required(),
             order: Yup.number().required(),
         });
 
@@ -117,9 +113,9 @@ export default {
             abortEarly: false,
         });
 
-        const panels = panelsRepository.create(data);
+        const estimateItems = estimateItemsRepository.create(data);
 
-        await panelsRepository.update(id, panels);
+        await estimateItemsRepository.update(id, estimateItems);
 
         return response.status(204).json();
     },
@@ -130,9 +126,9 @@ export default {
         if (! await UsersRolesController.can(user_id, "estimates", "remove"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
-        const panelsRepository = getCustomRepository(PanelsRepository);
+        const estimateItemsRepository = getCustomRepository(EstimateItemsRepository);
 
-        await panelsRepository.delete(id);
+        await estimateItemsRepository.delete(id);
 
         return response.status(204).send();
     }

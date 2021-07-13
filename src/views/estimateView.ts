@@ -4,6 +4,7 @@ import panelView from './panelView';
 import roofOrientationView from './roofOrientationView';
 import roofTypeView from './roofTypeView';
 import statusView from './estimateStatusView';
+import itemView from './estimateItemView';
 
 export default {
     render(estimate: Estimate) {
@@ -55,6 +56,7 @@ export default {
             roof_orientation: estimate.roof_orientation && roofOrientationView.render(estimate.roof_orientation),
             roof_type: estimate.roof_type && roofTypeView.render(estimate.roof_type),
             status: estimate.status && statusView.render(estimate.status),
+            items: !!estimate.items.length ? itemView.renderMany(estimate.items) : [],
         }
     },
 

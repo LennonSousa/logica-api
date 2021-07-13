@@ -1,10 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import Panel from './PanelsModel';
 import User from './UsersModel';
 import RoofOrientation from './RoofOrientationsModel';
 import RoofType from './RoofTypesModel';
 import EstimateStatus from './EstimateStatusModel';
+import EstimateItem from './EstimateItemsModel';
 
 @Entity('licensings')
 export default class EstimatesModel {
@@ -153,4 +154,10 @@ export default class EstimatesModel {
     @ManyToOne(() => EstimateStatus, estimateStatus => estimateStatus.estimates)
     @JoinColumn({ name: 'status_id' })
     status: EstimateStatus;
+
+    @OneToMany(() => EstimateItem, item => item.estimate, {
+        cascade: ['insert', 'update']
+    })
+    @JoinColumn({ name: 'estimate_id' })
+    items: EstimateItem[];
 }

@@ -9,6 +9,7 @@ import UsersResetsController from '../controllers/UsersResetsController';
 
 import EstimatesController from '../controllers/EstimatesController';
 import EstimateStatusController from '../controllers/EstimateStatusController';
+import EstimateItemsController from '../controllers/EstimateItemsController';
 import PanelPricesController from '../controllers/PanelPricesController';
 import PanelsController from '../controllers/PanelsController';
 import RoofOrientationsController from '../controllers/RoofOrientationsController';
@@ -41,6 +42,12 @@ userAuthRoutes.get('/estimates/status/:id', usersAuthMiddleware, EstimateStatusC
 userAuthRoutes.post('/estimates/status', usersAuthMiddleware, EstimateStatusController.create);
 userAuthRoutes.put('/estimates/status/:id', usersAuthMiddleware, EstimateStatusController.update);
 userAuthRoutes.delete('/estimates/status/:id', usersAuthMiddleware, EstimateStatusController.delete);
+
+userAuthRoutes.get('/estimates/items', usersAuthMiddleware, EstimateItemsController.index);
+userAuthRoutes.get('/estimates/items/:id', usersAuthMiddleware, EstimateItemsController.show);
+userAuthRoutes.post('/estimates/items', usersAuthMiddleware, EstimateItemsController.create);
+userAuthRoutes.put('/estimates/items/:id', usersAuthMiddleware, EstimateItemsController.update);
+userAuthRoutes.delete('/estimates/items/:id', usersAuthMiddleware, EstimateItemsController.delete);
 
 userAuthRoutes.get('/estimates', usersAuthMiddleware, EstimatesController.index);
 userAuthRoutes.get('/estimates/:id', usersAuthMiddleware, EstimatesController.show);

@@ -13,6 +13,8 @@ export default {
     },
 
     renderMany(panelPrices: PanelPrice[]) {
-        return panelPrices.map(panelPrice => this.render(panelPrice));
+        const panelPricesSorted = panelPrices.sort((a, b) => a.potency - b.potency);
+
+        return panelPricesSorted.map(panelPrice => this.render(panelPrice));
     }
 }
