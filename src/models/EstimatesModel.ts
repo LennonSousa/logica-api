@@ -7,7 +7,7 @@ import RoofType from './RoofTypesModel';
 import EstimateStatus from './EstimateStatusModel';
 import EstimateItem from './EstimateItemsModel';
 
-@Entity('licensings')
+@Entity('estimates')
 export default class EstimatesModel {
     @PrimaryGeneratedColumn('uuid')
     readonly id: string;

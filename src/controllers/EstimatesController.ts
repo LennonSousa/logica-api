@@ -52,6 +52,12 @@ export default {
                 take: Number(limit),
                 skip: ((Number(page) - 1) * Number(limit)),
             });
+
+            const totalPages = Math.ceil(estimates.length / Number(limit));
+
+            response.header('X-Total-Pages', String(totalPages));
+
+            return response.json(estimateView.renderMany(estimates));
         }
 
         if (user) {
@@ -66,7 +72,24 @@ export default {
                 take: Number(limit),
                 skip: ((Number(page) - 1) * Number(limit)),
             });
+
+            const totalPages = Math.ceil(estimates.length / Number(limit));
+
+            response.header('X-Total-Pages', String(totalPages));
+
+            return response.json(estimateView.renderMany(estimates));
         }
+
+        estimates = await estimatesRepository.find({
+            relations: [
+                'status',
+            ],
+            order: {
+                updated_at: "DESC"
+            },
+            take: Number(limit),
+            skip: ((Number(page) - 1) * Number(limit)),
+        });
 
         const totalPages = Math.ceil(estimates.length / Number(limit));
 
@@ -85,7 +108,13 @@ export default {
 
         const estimate = await estimatesRepository.findOneOrFail(id, {
             relations: [
+                'user',
+                'panel',
+                'panel.prices',
+                'roof_orientation',
+                'roof_type',
                 'status',
+                'items',
             ]
         });
 
@@ -241,7 +270,6 @@ export default {
             notes: Yup.string().notRequired().nullable(),
             created_by: Yup.string().required(),
             updated_by: Yup.string().required(),
-            user: Yup.string().notRequired().nullable(),
             panel: Yup.string().required(),
             roof_orientation: Yup.string().required(),
             roof_type: Yup.string().required(),

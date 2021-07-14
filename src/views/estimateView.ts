@@ -56,7 +56,7 @@ export default {
             roof_orientation: estimate.roof_orientation && roofOrientationView.render(estimate.roof_orientation),
             roof_type: estimate.roof_type && roofTypeView.render(estimate.roof_type),
             status: estimate.status && statusView.render(estimate.status),
-            items: !!estimate.items.length ? itemView.renderMany(estimate.items) : [],
+            items: estimate.items ? itemView.renderMany(estimate.items) : [],
         }
     },
 
