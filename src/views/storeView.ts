@@ -5,6 +5,7 @@ export default {
         return {
             id: store.id,
             title: store.title,
+            name: store.name,
             avatar: `${process.env.HOST_API}/uploads/store/${store.avatar}`,
             phone: store.phone,
             description: store.description,

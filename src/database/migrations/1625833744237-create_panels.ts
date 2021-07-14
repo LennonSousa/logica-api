@@ -25,6 +25,20 @@ export class createPanels1625833744237 implements MigrationInterface {
                     default: 0.00,
                 },
                 {
+                    name: 'width',
+                    type: 'decimal',
+                    scale: 2,
+                    precision: 10,
+                    default: 0.00,
+                },
+                {
+                    name: 'height',
+                    type: 'decimal',
+                    scale: 2,
+                    precision: 10,
+                    default: 0.00,
+                },
+                {
                     name: 'paused',
                     type: 'boolean',
                     default: false,

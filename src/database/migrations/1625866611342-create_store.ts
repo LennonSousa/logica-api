@@ -18,6 +18,10 @@ export class createStore1625866611342 implements MigrationInterface {
                     type: 'varchar',
                 },
                 {
+                    name: 'name',
+                    type: 'varchar',
+                },
+                {
                     name: 'avatar',
                     type: 'varchar',
                 },

@@ -23,6 +23,7 @@ export default {
 
         const {
             title,
+            name,
             phone,
             description,
             email,
@@ -46,6 +47,7 @@ export default {
 
             const data = {
                 title,
+                name,
                 avatar: avatar.filename,
                 phone,
                 description,
@@ -65,6 +67,7 @@ export default {
 
             const schema = Yup.object().shape({
                 title: Yup.string().required(),
+                name: Yup.string().required(),
                 avatar: Yup.string().required(),
                 phone: Yup.string().notRequired(),
                 description: Yup.string().notRequired().nullable(),
@@ -95,6 +98,7 @@ export default {
 
         const data = {
             title,
+            name,
             phone,
             description,
             email,
@@ -113,6 +117,7 @@ export default {
 
         const schema = Yup.object().shape({
             title: Yup.string().required(),
+            name: Yup.string().required(),
             phone: Yup.string().notRequired(),
             description: Yup.string().notRequired().nullable(),
             email: Yup.string().notRequired(),

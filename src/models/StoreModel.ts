@@ -9,6 +9,9 @@ export default class StoreModel {
     title: string;
 
     @Column()
+    name: string;
+
+    @Column()
     avatar: string;
 
     @Column()
