@@ -28,7 +28,7 @@ userAuthRoutes.put('/users/reset/:id', usersAuthMiddleware, UsersResetsControlle
 
 userAuthRoutes.get('/users', usersAuthMiddleware, UsersController.index);
 userAuthRoutes.get('/users/:id', usersAuthMiddleware, UsersController.show);
-userAuthRoutes.post('/users', UsersController.create);
+userAuthRoutes.post('/users', usersAuthMiddleware, UsersController.create);
 userAuthRoutes.put('/users/:id', usersAuthMiddleware, UsersController.update);
 userAuthRoutes.delete('/users/:id', usersAuthMiddleware, UsersController.delete);
 
