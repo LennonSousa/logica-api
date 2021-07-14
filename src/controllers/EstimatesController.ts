@@ -251,6 +251,7 @@ export default {
                     name: Yup.string().required(),
                     amount: Yup.number().required(),
                     price: Yup.number().required(),
+                    percent: Yup.number().required(),
                     order: Yup.number().required(),
                 })
             ),

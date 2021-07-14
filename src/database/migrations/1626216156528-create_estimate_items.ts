@@ -33,6 +33,13 @@ export class createEstimateItems1626216156528 implements MigrationInterface {
                         default: 0.00,
                     },
                     {
+                        name: 'percent',
+                        type: 'decimal',
+                        scale: 2,
+                        precision: 10,
+                        default: 0.00,
+                    },
+                    {
                         name: 'order',
                         type: 'inteter'
                     },

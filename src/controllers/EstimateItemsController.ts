@@ -47,6 +47,7 @@ export default {
             name,
             amount,
             price,
+            percent,
             order,
             estimate,
         } = request.body;
@@ -57,6 +58,7 @@ export default {
             name,
             amount,
             price,
+            percent,
             order,
             estimate,
         };
@@ -65,6 +67,7 @@ export default {
             name: Yup.string().required(),
             amount: Yup.number().required(),
             price: Yup.number().required(),
+            percent: Yup.number().required(),
             order: Yup.number().required(),
             estimate: Yup.string().required(),
         });
@@ -90,6 +93,7 @@ export default {
             name,
             amount,
             price,
+            percent,
             order,
         } = request.body;
 
@@ -99,6 +103,7 @@ export default {
             name,
             amount,
             price,
+            percent,
             order,
         };
 
@@ -106,6 +111,7 @@ export default {
             name: Yup.string().required(),
             amount: Yup.number().required(),
             price: Yup.number().required(),
+            percent: Yup.number().required(),
             order: Yup.number().required(),
         });
 

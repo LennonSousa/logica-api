@@ -7,6 +7,7 @@ export default {
             name: estimateItem.name,
             amount: estimateItem.amount,
             price: estimateItem.price,
+            percent: estimateItem.percent,
             order: estimateItem.order,
         }
     },

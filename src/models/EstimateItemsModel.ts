@@ -17,6 +17,9 @@ export default class EstimateItemsModel {
     price: number;
 
     @Column()
+    percent: number;
+
+    @Column()
     order: number;
 
     @ManyToOne(() => Estimate, estimate => estimate.items)
