@@ -10,7 +10,7 @@ export default {
             email: user.email,
             active: user.active,
             paused: user.paused,
-            sudo: user.sudo,
+            sudo: user.root,
             created_at: user.created_at,
             roles: user.roles ? userRoleView.renderMany(user.roles) : [],
         }
