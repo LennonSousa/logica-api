@@ -41,7 +41,7 @@ export class createEstimateItems1626216156528 implements MigrationInterface {
                     },
                     {
                         name: 'order',
-                        type: 'inteter'
+                        type: 'integer'
                     },
                     {
                         name: 'estimate_id',
