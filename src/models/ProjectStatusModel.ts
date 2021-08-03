@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import Estimate from './EstimatesModel';
+import Project from './ProjectsModel';
 
 @Entity('project_status')
 export default class ProjectStatusModel {
@@ -13,7 +13,7 @@ export default class ProjectStatusModel {
     @Column()
     order: number;
 
-    @OneToMany(() => Estimate, estimate => estimate.status)
+    @OneToMany(() => Project, project => project.status)
     @JoinColumn({ name: 'status_id' })
-    estimates: Estimate[];
+    projects: Project[];
 }

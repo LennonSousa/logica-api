@@ -3,6 +3,8 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import User from './UsersModel';
 import ProjectStatus from './ProjectStatusModel';
 import Event from './ProjectEventsModel';
+import AttachmentRequired from './ProjectAttachmentsRequiredModel';
+import Attachment from './ProjectAttachmentsModel';
 
 @Entity('projects')
 export default class ProjectsModel {
@@ -124,11 +126,19 @@ export default class ProjectsModel {
     @JoinColumn({ name: 'seller_id' })
     seller_id: User;
 
-    @ManyToOne(() => ProjectStatus, projectStatus => projectStatus.estimates)
+    @ManyToOne(() => ProjectStatus, projectStatus => projectStatus.projects)
     @JoinColumn({ name: 'status_id' })
     status: ProjectStatus;
 
     @OneToMany(() => Event, event => event.project)
     @JoinColumn({ name: 'project_id' })
     events: Event[];
+
+    @OneToMany(() => AttachmentRequired, attachmentRequired => attachmentRequired.project)
+    @JoinColumn({ name: 'project_id' })
+    attachmentsRequired: AttachmentRequired[];
+
+    @OneToMany(() => Attachment, attachment => attachment.project)
+    @JoinColumn({ name: 'project_id' })
+    attachments: Attachment[];
 }

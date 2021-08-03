@@ -1,17 +1,17 @@
-import RoofType from '../models/RoofTypesModel';
+import EstimateStatus from '../models/EstimateStatusModel';
 import estimateView from './estimateView';
 
 export default {
-    render(roofType: RoofType) {
+    render(status: EstimateStatus) {
         return {
-            id: roofType.id,
-            name: roofType.name,
-            order: roofType.order,
-            estimates: roofType.estimates ? estimateView.renderMany(roofType.estimates) : [],
+            id: status.id,
+            name: status.name,
+            order: status.order,
+            estimates: status.estimates ? estimateView.renderMany(status.estimates) : [],
         }
     },
 
-    renderMany(roofTypes: RoofType[]) {
-        return roofTypes.map(roofType => this.render(roofType));
+    renderMany(status: EstimateStatus[]) {
+        return status.map(statusItem => this.render(statusItem));
     }
 }
