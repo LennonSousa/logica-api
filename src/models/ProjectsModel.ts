@@ -57,7 +57,7 @@ export default class ProjectsModel {
     capacity: string;
 
     @Column()
-    inversor: number;
+    inversor: string;
 
     @Column()
     roof_orientation: string;
@@ -73,6 +73,9 @@ export default class ProjectsModel {
 
     @Column()
     notes: string;
+
+    @Column()
+    financier_same: boolean;
 
     @Column()
     financier: string;

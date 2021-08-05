@@ -12,6 +12,12 @@ export default {
         }
     },
 
+    renderDownload(incomeAttachment: IncomeAttachments) {
+        return {
+            path: `${process.env.UPLOADS_DIR}/incomings/${incomeAttachment.income.id}/${incomeAttachment.path}`,
+        }
+    },
+
     renderMany(incomeAttachments: IncomeAttachments[]) {
         return incomeAttachments.map(incomeAttachment => this.render(incomeAttachment));
     }

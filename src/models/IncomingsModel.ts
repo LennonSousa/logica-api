@@ -27,7 +27,9 @@ export default class IncomingsModel {
     @JoinColumn({ name: 'pay_type_id' })
     payType: PayType;
 
-    @OneToMany(() => IncomeItem, incomeItem => incomeItem.income)
+    @OneToMany(() => IncomeItem, incomeItem => incomeItem.income, {
+        cascade: ['insert', 'update']
+    })
     @JoinColumn({ name: 'income_id' })
     items: IncomeItem[];
 

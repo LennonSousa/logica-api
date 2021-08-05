@@ -30,6 +30,7 @@ export default {
             price: project.price,
             seler: project.seler,
             notes: project.notes,
+            financier_same: project.financier_same,
             financier: project.financier,
             financier_document: project.financier_document,
             financier_rg: project.financier_rg,

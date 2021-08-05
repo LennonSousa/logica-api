@@ -7,11 +7,22 @@ import UsersRolesController from '../controllers/UsersRolesController';
 import UsersNewController from '../controllers/UsersNewController';
 import UsersResetsController from '../controllers/UsersResetsController';
 
+import AttachmentsRequiredProjectController from '../controllers/AttachmentsRequiredProjectController';
 import EstimatesController from '../controllers/EstimatesController';
 import EstimateStatusController from '../controllers/EstimateStatusController';
 import EstimateItemsController from '../controllers/EstimateItemsController';
+import EventsProjectController from '../controllers/EventsProjectController';
+import IncomeAttachmentsController from '../controllers/IncomeAttachmentsController';
+import IncomeItemsController from '../controllers/IncomeItemsController';
+import IncomingsController from '../controllers/IncomingsController';
 import PanelPricesController from '../controllers/PanelPricesController';
 import PanelsController from '../controllers/PanelsController';
+import PayTypesController from '../controllers/PayTypesController';
+import ProjectAttachmentsController from '../controllers/ProjectAttachmentsController';
+import ProjectAttachmentsRequiredController from '../controllers/ProjectAttachmentsRequiredController';
+import ProjectEventsController from '../controllers/ProjectEventsController';
+import ProjectsController from '../controllers/ProjectsController';
+import ProjectStatusController from '../controllers/ProjectStatusController';
 import RoofOrientationsController from '../controllers/RoofOrientationsController';
 import RoofTypesController from '../controllers/RoofTypesController';
 import StoreController from '../controllers/StoreController';
@@ -66,6 +77,18 @@ userAuthRoutes.get('/panels/:id', usersAuthMiddleware, PanelsController.show);
 userAuthRoutes.post('/panels', usersAuthMiddleware, PanelsController.create);
 userAuthRoutes.put('/panels/:id', usersAuthMiddleware, PanelsController.update);
 userAuthRoutes.delete('/panels/:id', usersAuthMiddleware, PanelsController.delete);
+
+userAuthRoutes.get('/projects/status', usersAuthMiddleware, ProjectStatusController.index);
+userAuthRoutes.get('/projects/status/:id', usersAuthMiddleware, ProjectStatusController.show);
+userAuthRoutes.post('/projects/status', usersAuthMiddleware, ProjectStatusController.create);
+userAuthRoutes.put('/projects/status/:id', usersAuthMiddleware, ProjectStatusController.update);
+userAuthRoutes.delete('/projects/status/:id', usersAuthMiddleware, ProjectStatusController.delete);
+
+userAuthRoutes.get('/projects', usersAuthMiddleware, ProjectsController.index);
+userAuthRoutes.get('/projects/:id', usersAuthMiddleware, ProjectsController.show);
+userAuthRoutes.post('/projects', usersAuthMiddleware, ProjectsController.create);
+userAuthRoutes.put('/projects/:id', usersAuthMiddleware, ProjectsController.update);
+userAuthRoutes.delete('/projects/:id', usersAuthMiddleware, ProjectsController.delete);
 
 userAuthRoutes.get('/roofs/orientations', usersAuthMiddleware, RoofOrientationsController.index);
 userAuthRoutes.get('/roofs/orientations/:id', usersAuthMiddleware, RoofOrientationsController.show);

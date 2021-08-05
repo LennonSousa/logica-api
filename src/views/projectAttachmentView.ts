@@ -12,6 +12,12 @@ export default {
         }
     },
 
+    renderDownload(projectAttachment: ProjectAttachment) {
+        return {
+            path: `${process.env.UPLOADS_DIR}/projects/${projectAttachment.project.id}/${projectAttachment.path}`,
+        }
+    },
+
     renderMany(projectEvents: ProjectAttachment[]) {
         return projectEvents.map(projectEvent => this.render(projectEvent));
     }
