@@ -21,6 +21,7 @@ export class createProjectAttachmentsRequired1627909461657 implements MigrationI
                     {
                         name: 'path',
                         type: 'varchar',
+                        isNullable: true,
                     },
                     {
                         name: 'received_at',

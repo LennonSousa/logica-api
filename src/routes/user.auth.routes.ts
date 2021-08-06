@@ -48,6 +48,12 @@ userAuthRoutes.put('/users/roles/:id', usersAuthMiddleware, UsersRolesController
 
 userAuthRoutes.put('/users/new/:id', usersAuthMiddleware, UsersNewController.update);
 
+userAuthRoutes.get('/attachments-required/project', usersAuthMiddleware, AttachmentsRequiredProjectController.index);
+userAuthRoutes.get('/attachments-required/project/:id', usersAuthMiddleware, AttachmentsRequiredProjectController.show);
+userAuthRoutes.post('/attachments-required/project', usersAuthMiddleware, AttachmentsRequiredProjectController.create);
+userAuthRoutes.put('/attachments-required/project/:id', usersAuthMiddleware, AttachmentsRequiredProjectController.update);
+userAuthRoutes.delete('/attachments-required/project/:id', usersAuthMiddleware, AttachmentsRequiredProjectController.delete);
+
 userAuthRoutes.get('/estimates/status', usersAuthMiddleware, EstimateStatusController.index);
 userAuthRoutes.get('/estimates/status/:id', usersAuthMiddleware, EstimateStatusController.show);
 userAuthRoutes.post('/estimates/status', usersAuthMiddleware, EstimateStatusController.create);
@@ -66,6 +72,29 @@ userAuthRoutes.post('/estimates', usersAuthMiddleware, EstimatesController.creat
 userAuthRoutes.put('/estimates/:id', usersAuthMiddleware, EstimatesController.update);
 userAuthRoutes.delete('/estimates/:id', usersAuthMiddleware, EstimatesController.delete);
 
+userAuthRoutes.get('/events/project', usersAuthMiddleware, EventsProjectController.index);
+userAuthRoutes.get('/events/project/:id', usersAuthMiddleware, EventsProjectController.show);
+userAuthRoutes.post('/events/project', usersAuthMiddleware, EventsProjectController.create);
+userAuthRoutes.put('/events/project/:id', usersAuthMiddleware, EventsProjectController.update);
+userAuthRoutes.delete('/events/project/:id', usersAuthMiddleware, EventsProjectController.delete);
+
+userAuthRoutes.get('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.show);
+userAuthRoutes.post('/incomings/attachments', usersAuthMiddleware, UploadsConfig('incomings').single('file'), IncomeAttachmentsController.create);
+userAuthRoutes.put('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.update);
+userAuthRoutes.delete('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.delete);
+
+userAuthRoutes.get('/incomings/items', usersAuthMiddleware, IncomeItemsController.index);
+userAuthRoutes.get('/incomings/items/:id', usersAuthMiddleware, IncomeItemsController.show);
+userAuthRoutes.post('/incomings/items', usersAuthMiddleware, IncomeItemsController.create);
+userAuthRoutes.put('/incomings/items/:id', usersAuthMiddleware, IncomeItemsController.update);
+userAuthRoutes.delete('/incomings/items/:id', usersAuthMiddleware, IncomeItemsController.delete);
+
+userAuthRoutes.get('/incomings', usersAuthMiddleware, IncomingsController.index);
+userAuthRoutes.get('/incomings/:id', usersAuthMiddleware, IncomingsController.show);
+userAuthRoutes.post('/incomings', usersAuthMiddleware, IncomingsController.create);
+userAuthRoutes.put('/incomings/:id', usersAuthMiddleware, IncomingsController.update);
+userAuthRoutes.delete('/incomings/:id', usersAuthMiddleware, IncomingsController.delete);
+
 userAuthRoutes.get('/panels/prices', usersAuthMiddleware, PanelPricesController.index);
 userAuthRoutes.get('/panels/prices/:id', usersAuthMiddleware, PanelPricesController.show);
 userAuthRoutes.post('/panels/prices', usersAuthMiddleware, PanelPricesController.create);
@@ -77,6 +106,28 @@ userAuthRoutes.get('/panels/:id', usersAuthMiddleware, PanelsController.show);
 userAuthRoutes.post('/panels', usersAuthMiddleware, PanelsController.create);
 userAuthRoutes.put('/panels/:id', usersAuthMiddleware, PanelsController.update);
 userAuthRoutes.delete('/panels/:id', usersAuthMiddleware, PanelsController.delete);
+
+userAuthRoutes.get('/payments/types', usersAuthMiddleware, PayTypesController.index);
+userAuthRoutes.get('/payments/types/:id', usersAuthMiddleware, PayTypesController.show);
+userAuthRoutes.post('/payments/types', usersAuthMiddleware, PayTypesController.create);
+userAuthRoutes.put('/payments/types/:id', usersAuthMiddleware, PayTypesController.update);
+userAuthRoutes.delete('/payments/types/:id', usersAuthMiddleware, PayTypesController.delete);
+
+userAuthRoutes.get('/projects/attachments/:id', usersAuthMiddleware, ProjectAttachmentsController.show);
+userAuthRoutes.post('/projects/attachments', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsController.create);
+userAuthRoutes.put('/projects/attachments/:id', usersAuthMiddleware, ProjectAttachmentsController.update);
+userAuthRoutes.delete('/projects/attachments/:id', usersAuthMiddleware, ProjectAttachmentsController.delete);
+
+userAuthRoutes.get('/projects/attachments-required/:id', usersAuthMiddleware, ProjectAttachmentsRequiredController.show);
+userAuthRoutes.post('/projects/attachments-required', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.create);
+userAuthRoutes.put('/projects/attachments-required/:id', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.update);
+userAuthRoutes.delete('/projects/attachments-required/:id', usersAuthMiddleware, ProjectAttachmentsRequiredController.delete);
+
+userAuthRoutes.get('/projects/events', usersAuthMiddleware, ProjectEventsController.index);
+userAuthRoutes.get('/projects/events/:id', usersAuthMiddleware, ProjectEventsController.show);
+userAuthRoutes.post('/projects/events', usersAuthMiddleware, ProjectEventsController.create);
+userAuthRoutes.put('/projects/events/:id', usersAuthMiddleware, ProjectEventsController.update);
+userAuthRoutes.delete('/projects/events/:id', usersAuthMiddleware, ProjectEventsController.delete);
 
 userAuthRoutes.get('/projects/status', usersAuthMiddleware, ProjectStatusController.index);
 userAuthRoutes.get('/projects/status/:id', usersAuthMiddleware, ProjectStatusController.show);
