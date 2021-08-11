@@ -247,7 +247,31 @@ export default {
             created_by: Yup.string().required(),
             updated_by: Yup.string().required(),
             status: Yup.string().required(),
-
+            events: Yup.array(
+                Yup.object().shape({
+                    notes: Yup.string().required(),
+                    done: Yup.boolean().notRequired(),
+                    done_at: Yup.date().notRequired(),
+                    event: Yup.string().required(),
+                    project: Yup.string().required(),
+                })
+            ),
+            incomings: Yup.array(
+                Yup.object().shape({
+                    description: Yup.string().required(),
+                    value: Yup.number().required(),
+                    project: Yup.boolean().notRequired(),
+                    pay_type: Yup.string().required(),
+                    items: Yup.array(
+                        Yup.object().shape({
+                            description: Yup.string().required(),
+                            value: Yup.number().required(),
+                            is_paid: Yup.boolean().notRequired(),
+                            received_at: Yup.date().notRequired(),
+                        })
+                    ),
+                })
+            ),
         });
 
         await schema.validate(data, {

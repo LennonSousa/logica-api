@@ -64,6 +64,7 @@ export default {
             value: Yup.number().required(),
             is_paid: Yup.boolean().notRequired(),
             received_at: Yup.date().notRequired(),
+            income: Yup.string().required(),
         });
 
         await schema.validate(data, {

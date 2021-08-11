@@ -5,6 +5,8 @@ import ProjectStatus from './ProjectStatusModel';
 import Event from './ProjectEventsModel';
 import AttachmentRequired from './ProjectAttachmentsRequiredModel';
 import Attachment from './ProjectAttachmentsModel';
+import Income from './IncomingsModel';
+import incomeAttachmentView from '../views/incomeAttachmentView';
 
 @Entity('projects')
 export default class ProjectsModel {
@@ -133,7 +135,9 @@ export default class ProjectsModel {
     @JoinColumn({ name: 'status_id' })
     status: ProjectStatus;
 
-    @OneToMany(() => Event, event => event.project)
+    @OneToMany(() => Event, event => event.project, {
+        cascade: ['insert', 'update']
+    })
     @JoinColumn({ name: 'project_id' })
     events: Event[];
 
@@ -144,4 +148,10 @@ export default class ProjectsModel {
     @OneToMany(() => Attachment, attachment => attachment.project)
     @JoinColumn({ name: 'project_id' })
     attachments: Attachment[];
+
+    @OneToMany(() => Income, incomeAttachmentView => incomeAttachmentView.project, {
+        cascade: ['insert', 'update']
+    })
+    @JoinColumn({ name: 'project_id' })
+    incomings: Income[];
 }
