@@ -108,11 +108,15 @@ export default {
 
         const project = await projectsRepository.findOneOrFail(id, {
             relations: [
-                'seller_id',
+                'seller',
                 'status',
                 'events',
+                'events.event',
                 'attachmentsRequired',
+                'attachmentsRequired.attachmentRequired',
+                'attachmentsRequired.project',
                 'attachments',
+                'attachments.project',
             ]
         });
 
@@ -145,7 +149,6 @@ export default {
             roof_orientation,
             roof_type,
             price,
-            seller,
             notes,
             financier_same,
             financier,
@@ -161,6 +164,7 @@ export default {
             financier_city,
             financier_state,
             status,
+            events
         } = request.body;
 
         const projectsRepository = getCustomRepository(ProjectsRepository);
@@ -189,7 +193,6 @@ export default {
             roof_orientation,
             roof_type,
             price,
-            seller,
             notes,
             financier_same,
             financier,
@@ -204,7 +207,9 @@ export default {
             financier_complement,
             financier_city,
             financier_state,
+            seller: userCreator,
             status,
+            events,
             created_by: userCreator.name,
             updated_by: userCreator.name,
         };
@@ -229,7 +234,6 @@ export default {
             roof_orientation: Yup.string().required(),
             roof_type: Yup.string().required(),
             price: Yup.number().required(),
-            seler: Yup.string().required(),
             notes: Yup.string().notRequired().nullable(),
             financier_same: Yup.boolean().notRequired(),
             financier: Yup.string().required(),
@@ -249,11 +253,10 @@ export default {
             status: Yup.string().required(),
             events: Yup.array(
                 Yup.object().shape({
-                    notes: Yup.string().required(),
+                    notes: Yup.string().notRequired(),
                     done: Yup.boolean().notRequired(),
                     done_at: Yup.date().notRequired(),
                     event: Yup.string().required(),
-                    project: Yup.string().required(),
                 })
             ),
             incomings: Yup.array(
@@ -311,7 +314,6 @@ export default {
             roof_orientation,
             roof_type,
             price,
-            seller,
             notes,
             financier_same,
             financier,
@@ -355,7 +357,6 @@ export default {
             roof_orientation,
             roof_type,
             price,
-            seller,
             notes,
             financier_same,
             financier,
@@ -395,7 +396,6 @@ export default {
             roof_orientation: Yup.string().required(),
             roof_type: Yup.string().required(),
             price: Yup.number().required(),
-            seler: Yup.string().required(),
             notes: Yup.string().notRequired().nullable(),
             financier_same: Yup.boolean().notRequired(),
             financier: Yup.string().required(),

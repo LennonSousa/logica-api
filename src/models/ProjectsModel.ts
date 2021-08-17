@@ -56,7 +56,7 @@ export default class ProjectsModel {
     coordinates: string;
 
     @Column()
-    capacity: string;
+    capacity: number;
 
     @Column()
     inversor: string;
@@ -69,9 +69,6 @@ export default class ProjectsModel {
 
     @Column()
     price: number;
-
-    @Column()
-    seler: string;
 
     @Column()
     notes: string;
@@ -129,7 +126,7 @@ export default class ProjectsModel {
 
     @ManyToOne(() => User, user => user.estimates)
     @JoinColumn({ name: 'seller_id' })
-    seller_id: User;
+    seller: User;
 
     @ManyToOne(() => ProjectStatus, projectStatus => projectStatus.projects)
     @JoinColumn({ name: 'status_id' })

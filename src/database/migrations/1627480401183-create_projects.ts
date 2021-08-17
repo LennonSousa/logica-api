@@ -82,7 +82,10 @@ export class createProjects1627480401183 implements MigrationInterface {
                     },
                     {
                         name: 'capacity',
-                        type: 'varchar',
+                        type: 'decimal',
+                        scale: 2,
+                        precision: 10,
+                        default: 0.00,
                     },
                     {
                         name: 'inversor',
@@ -102,15 +105,6 @@ export class createProjects1627480401183 implements MigrationInterface {
                         scale: 2,
                         precision: 10,
                         default: 0.00,
-                    },
-                    {
-                        name: 'seller_id',
-                        type: 'varchar',
-                        isNullable: true,
-                    },
-                    {
-                        name: 'seller',
-                        type: 'varchar',
                     },
                     {
                         name: 'notes',
@@ -191,6 +185,11 @@ export class createProjects1627480401183 implements MigrationInterface {
                         name: 'updated_at',
                         type: 'datetime',
                         default: 'now()',
+                    },
+                    {
+                        name: 'seller_id',
+                        type: 'varchar',
+                        isNullable: true,
                     },
                     {
                         name: 'status_id',

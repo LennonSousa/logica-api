@@ -10,7 +10,7 @@ export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectEventsRepository = getCustomRepository(ProjectEventsRepository);
@@ -31,7 +31,7 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectEventsRepository = getCustomRepository(ProjectEventsRepository);
@@ -49,7 +49,7 @@ export default {
     async create(request: Request, response: Response) {
         const { user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "create"))
+        if (! await UsersRolesController.can(user_id, "projects", "create"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const {
@@ -71,7 +71,7 @@ export default {
         };
 
         const schema = Yup.object().shape({
-            notes: Yup.string().required(),
+            notes: Yup.string().notRequired(),
             done: Yup.boolean().notRequired(),
             done_at: Yup.date().notRequired(),
             event: Yup.string().required(),
@@ -92,7 +92,7 @@ export default {
     async update(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "update"))
+        if (! await UsersRolesController.can(user_id, "projects", "update"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const {
@@ -110,7 +110,7 @@ export default {
         };
 
         const schema = Yup.object().shape({
-            notes: Yup.string().required(),
+            notes: Yup.string().notRequired().nullable(),
             done: Yup.boolean().notRequired(),
             done_at: Yup.date().notRequired(),
         });
@@ -129,7 +129,7 @@ export default {
     async delete(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "remove"))
+        if (! await UsersRolesController.can(user_id, "projects", "remove"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectEventsRepository = getCustomRepository(ProjectEventsRepository);
