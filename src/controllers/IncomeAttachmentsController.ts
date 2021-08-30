@@ -118,7 +118,7 @@ export default {
 
         try {
             fs.rmSync(
-                `${process.env.UPLOADS_DIR}/incomes/${incomeAttachment.income.id}/${incomeAttachment.path}`, {
+                `${process.env.UPLOADS_DIR}/incomings/${incomeAttachment.income.id}/${incomeAttachment.path}`, {
                 maxRetries: 3
             });
         }

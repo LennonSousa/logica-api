@@ -79,7 +79,7 @@ userAuthRoutes.put('/events/project/:id', usersAuthMiddleware, EventsProjectCont
 userAuthRoutes.delete('/events/project/:id', usersAuthMiddleware, EventsProjectController.delete);
 
 userAuthRoutes.get('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.show);
-userAuthRoutes.post('/incomings/attachments', usersAuthMiddleware, UploadsConfig('incomings').single('file'), IncomeAttachmentsController.create);
+userAuthRoutes.post('/incomings/:id/attachments', usersAuthMiddleware, UploadsConfig('incomings').single('file'), IncomeAttachmentsController.create);
 userAuthRoutes.put('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.update);
 userAuthRoutes.delete('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.delete);
 
@@ -119,8 +119,8 @@ userAuthRoutes.put('/projects/attachments/:id', usersAuthMiddleware, ProjectAtta
 userAuthRoutes.delete('/projects/attachments/:id', usersAuthMiddleware, ProjectAttachmentsController.delete);
 
 userAuthRoutes.get('/projects/attachments-required/:id', usersAuthMiddleware, ProjectAttachmentsRequiredController.show);
-userAuthRoutes.post('/projects/attachments-required', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.create);
-userAuthRoutes.put('/projects/attachments-required/:id', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.update);
+userAuthRoutes.post('/projects/:id/attachments-required', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.create);
+userAuthRoutes.put('/projects/:id/attachments-required/:aid', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.update);
 userAuthRoutes.delete('/projects/attachments-required/:id', usersAuthMiddleware, ProjectAttachmentsRequiredController.delete);
 
 userAuthRoutes.get('/projects/events', usersAuthMiddleware, ProjectEventsController.index);

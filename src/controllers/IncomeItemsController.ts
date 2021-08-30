@@ -18,7 +18,7 @@ export default {
         const incomeItems = await incomeItemsRepository.find({
             order: {
                 received_at: "ASC"
-            }
+            },
         });
 
         return response.json(incomeItemsView.renderMany(incomeItems));
@@ -48,6 +48,7 @@ export default {
             value,
             is_paid,
             received_at,
+            income,
         } = request.body;
 
         const incomeItemsRepository = getCustomRepository(IncomeItemsRepository);
@@ -57,6 +58,7 @@ export default {
             value,
             is_paid,
             received_at,
+            income,
         };
 
         const schema = Yup.object().shape({

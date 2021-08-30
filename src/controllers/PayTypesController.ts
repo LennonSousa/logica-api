@@ -44,7 +44,7 @@ export default {
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const {
-            description,
+            name,
             order,
             active,
         } = request.body;
@@ -52,13 +52,13 @@ export default {
         const payTypesRepository = getCustomRepository(PayTypesRepository);
 
         const data = {
-            description,
+            name,
             order,
             active,
         };
 
         const schema = Yup.object().shape({
-            description: Yup.string().required(),
+            name: Yup.string().required(),
             order: Yup.number().required(),
             active: Yup.boolean().notRequired(),
         });
@@ -81,7 +81,7 @@ export default {
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const {
-            description,
+            name,
             order,
             active,
         } = request.body;
@@ -89,13 +89,13 @@ export default {
         const payTypesRepository = getCustomRepository(PayTypesRepository);
 
         const data = {
-            description,
+            name,
             order,
             active,
         };
 
         const schema = Yup.object().shape({
-            description: Yup.string().required(),
+            name: Yup.string().required(),
             order: Yup.number().required(),
             active: Yup.boolean().notRequired(),
         });

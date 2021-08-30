@@ -15,10 +15,6 @@ export class createProjectAttachmentsRequired1627909461657 implements MigrationI
                         generationStrategy: 'uuid',
                     },
                     {
-                        name: 'name',
-                        type: 'varchar',
-                    },
-                    {
                         name: 'path',
                         type: 'varchar',
                         isNullable: true,

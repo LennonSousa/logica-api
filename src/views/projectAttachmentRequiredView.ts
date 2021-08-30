@@ -6,7 +6,6 @@ export default {
     render(projectAttachment: ProjectAttachmentRequired) {
         return {
             id: projectAttachment.id,
-            name: projectAttachment.name,
             path: projectAttachment.path,
             received_at: projectAttachment.received_at,
             attachmentRequired: projectAttachment.attachmentRequired && attachmentRequiredProjectView.render(projectAttachment.attachmentRequired),

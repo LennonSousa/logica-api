@@ -9,9 +9,6 @@ export default class ProjectAttachmentsRequiredModel {
     readonly id: string;
 
     @Column()
-    name: string;
-
-    @Column()
     path: string;
 
     @Column()

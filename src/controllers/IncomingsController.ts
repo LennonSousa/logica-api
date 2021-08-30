@@ -18,7 +18,8 @@ export default {
         const incomings = await incomingsRepository.find({
             order: {
                 created_at: "ASC"
-            }
+            },
+            relations: ['items']
         });
 
         return response.json(incomingsView.renderMany(incomings));
@@ -35,9 +36,10 @@ export default {
         const income = await incomingsRepository.findOneOrFail(id, {
             relations: [
                 'project',
-                'pay_type',
+                'payType',
                 'items',
                 'attachments',
+                'attachments.income',
             ]
         });
 
@@ -54,7 +56,7 @@ export default {
             description,
             value,
             project,
-            pay_type,
+            payType,
             items,
         } = request.body;
 
@@ -64,15 +66,15 @@ export default {
             description,
             value,
             project,
-            pay_type,
+            payType,
             items,
         };
 
         const schema = Yup.object().shape({
             description: Yup.string().required(),
             value: Yup.number().required(),
-            project: Yup.boolean().notRequired(),
-            pay_type: Yup.string().required(),
+            project: Yup.string().notRequired(),
+            payType: Yup.string().required(),
             items: Yup.array(
                 Yup.object().shape({
                     description: Yup.string().required(),
@@ -104,7 +106,7 @@ export default {
             description,
             value,
             project,
-            pay_type,
+            payType,
             items,
         } = request.body;
 
@@ -114,23 +116,15 @@ export default {
             description,
             value,
             project,
-            pay_type,
+            payType,
             items,
         };
 
         const schema = Yup.object().shape({
             description: Yup.string().required(),
             value: Yup.number().required(),
-            project: Yup.boolean().notRequired(),
-            pay_type: Yup.string().required(),
-            items: Yup.array(
-                Yup.object().shape({
-                    description: Yup.string().required(),
-                    value: Yup.number().required(),
-                    is_paid: Yup.boolean().notRequired(),
-                    received_at: Yup.date().notRequired(),
-                })
-            ),
+            project: Yup.string().notRequired().nullable(),
+            payType: Yup.string().required(),
         });
 
         await schema.validate(data, {

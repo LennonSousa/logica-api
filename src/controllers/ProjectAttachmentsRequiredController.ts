@@ -11,7 +11,7 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectAttachmentsRequiredRepository = getCustomRepository(ProjectAttachmentsRequiredRepository);
@@ -30,11 +30,10 @@ export default {
     async create(request: Request, response: Response) {
         const { user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "create"))
+        if (! await UsersRolesController.can(user_id, "projects", "create"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const {
-            name,
             received_at,
             attachmentRequired,
             project,
@@ -46,7 +45,6 @@ export default {
             const file = request.file as Express.Multer.File;
 
             const data = {
-                name,
                 path: file.filename,
                 received_at,
                 attachmentRequired,
@@ -54,7 +52,6 @@ export default {
             };
 
             const schema = Yup.object().shape({
-                name: Yup.string().required(),
                 path: Yup.string().required(),
                 received_at: Yup.date().required(),
                 attachmentRequired: Yup.string().required(),
@@ -73,14 +70,12 @@ export default {
         }
 
         const data = {
-            name,
             received_at,
             attachmentRequired,
             project,
         };
 
         const schema = Yup.object().shape({
-            name: Yup.string().required(),
             received_at: Yup.date().required(),
             attachmentRequired: Yup.string().required(),
             project: Yup.string().required(),
@@ -98,15 +93,13 @@ export default {
     },
 
     async update(request: Request, response: Response) {
-        const { id, user_id } = request.params;
+        const { aid, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "update"))
+        if (! await UsersRolesController.can(user_id, "projects", "update"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const {
-            name,
             received_at,
-            attachmentRequired,
         } = request.body;
 
         const projectAttachmentsRequiredRepository = getCustomRepository(ProjectAttachmentsRequiredRepository);
@@ -115,17 +108,13 @@ export default {
             const file = request.file as Express.Multer.File;
 
             const data = {
-                name,
                 path: file.filename,
                 received_at,
-                attachmentRequired,
             };
 
             const schema = Yup.object().shape({
-                name: Yup.string().required(),
                 path: Yup.string().required(),
                 received_at: Yup.date().required(),
-                attachmentRequired: Yup.string().required(),
             });
 
             await schema.validate(data, {
@@ -134,21 +123,17 @@ export default {
 
             const projectAttachmentRequired = projectAttachmentsRequiredRepository.create(data);
 
-            await projectAttachmentsRequiredRepository.update(id, projectAttachmentRequired);
+            await projectAttachmentsRequiredRepository.update(aid, projectAttachmentRequired);
 
             return response.status(204).json();
         }
 
         const data = {
-            name,
             received_at,
-            attachmentRequired,
         };
 
         const schema = Yup.object().shape({
-            name: Yup.string().required(),
             received_at: Yup.date().required(),
-            attachmentRequired: Yup.string().required(),
         });
 
         await schema.validate(data, {
@@ -157,7 +142,7 @@ export default {
 
         const projectAttachmentRequired = projectAttachmentsRequiredRepository.create(data);
 
-        await projectAttachmentsRequiredRepository.update(id, projectAttachmentRequired);
+        await projectAttachmentsRequiredRepository.update(aid, projectAttachmentRequired);
 
         return response.status(204).json();
     },
@@ -165,7 +150,7 @@ export default {
     async delete(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "remove"))
+        if (! await UsersRolesController.can(user_id, "projects", "remove"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectAttachmentsRequiredRepository = getCustomRepository(ProjectAttachmentsRequiredRepository);
@@ -187,7 +172,7 @@ export default {
         }
 
         const data = {
-            path: '',
+            path: null,
         };
 
         const updatedProjectAttachmentRequired = projectAttachmentsRequiredRepository.create(data);
