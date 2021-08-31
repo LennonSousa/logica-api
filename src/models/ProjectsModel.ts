@@ -6,7 +6,6 @@ import Event from './ProjectEventsModel';
 import AttachmentRequired from './ProjectAttachmentsRequiredModel';
 import Attachment from './ProjectAttachmentsModel';
 import Income from './IncomingsModel';
-import incomeAttachmentView from '../views/incomeAttachmentView';
 
 @Entity('projects')
 export default class ProjectsModel {
@@ -53,6 +52,18 @@ export default class ProjectsModel {
     state: string;
 
     @Column()
+    energy_company: string;
+
+    @Column()
+    unity: string;
+
+    @Column()
+    months_average: number;
+
+    @Column()
+    average_increase: number;
+
+    @Column()
     coordinates: string;
 
     @Column()
@@ -66,6 +77,12 @@ export default class ProjectsModel {
 
     @Column()
     roof_type: string;
+
+    @Column()
+    panel: string;
+
+    @Column()
+    panel_amount: number;
 
     @Column()
     price: number;

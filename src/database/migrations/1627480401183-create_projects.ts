@@ -77,6 +77,30 @@ export class createProjects1627480401183 implements MigrationInterface {
                         type: 'varchar'
                     },
                     {
+                        name: 'energy_company',
+                        type: 'varchar',
+                        isNullable: true,
+                    },
+                    {
+                        name: 'unity',
+                        type: 'varchar',
+                        isNullable: true,
+                    },
+                    {
+                        name: 'months_average',
+                        type: 'decimal',
+                        scale: 2,
+                        precision: 10,
+                        default: 0.00,
+                    },
+                    {
+                        name: 'average_increase',
+                        type: 'decimal',
+                        scale: 2,
+                        precision: 10,
+                        default: 0.00,
+                    },
+                    {
                         name: 'coordinates',
                         type: 'varchar',
                     },
@@ -98,6 +122,14 @@ export class createProjects1627480401183 implements MigrationInterface {
                     {
                         name: 'roof_type',
                         type: 'varchar',
+                    },
+                    {
+                        name: 'panel',
+                        type: 'varchar',
+                    },
+                    {
+                        name: 'panel_amount',
+                        type: 'integer',
                     },
                     {
                         name: 'price',
