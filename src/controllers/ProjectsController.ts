@@ -117,6 +117,8 @@ export default {
                 'attachmentsRequired.project',
                 'attachments',
                 'attachments.project',
+                'incomings',
+                'incomings.items',
             ]
         });
 
