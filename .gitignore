@@ -4,7 +4,6 @@ node_modules
 
 docker-compose.yml
 
-/uploads/*
 !/uploads/.gitkeep
 !/uploads/projects/.gitkeep
 !/uploads/incomings/.gitkeep
