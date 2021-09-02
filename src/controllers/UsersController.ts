@@ -50,6 +50,9 @@ export default {
     async create(request: Request, response: Response) {
         const { user_id } = request.params;
 
+        if (! await UsersRolesController.can(user_id, "users", "create"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
         const {
             name,
             phone,
