@@ -39,7 +39,7 @@ userAuthRoutes.put('/users/reset/:id', usersAuthMiddleware, UsersResetsControlle
 
 userAuthRoutes.get('/users', usersAuthMiddleware, UsersController.index);
 userAuthRoutes.get('/users/:id', usersAuthMiddleware, UsersController.show);
-userAuthRoutes.post('/users', UsersController.create);
+userAuthRoutes.post('/users', usersAuthMiddleware, UsersController.create);
 userAuthRoutes.put('/users/:id', usersAuthMiddleware, UsersController.update);
 userAuthRoutes.delete('/users/:id', usersAuthMiddleware, UsersController.delete);
 
@@ -154,7 +154,7 @@ userAuthRoutes.put('/roofs/types/:id', usersAuthMiddleware, RoofTypesController.
 userAuthRoutes.delete('/roofs/types/:id', usersAuthMiddleware, RoofTypesController.delete);
 
 userAuthRoutes.get('/store', usersAuthMiddleware, StoreController.show);
-userAuthRoutes.post('/store', usersAuthMiddleware, StoreController.create);
+//userAuthRoutes.post('/store', usersAuthMiddleware, StoreController.create);
 userAuthRoutes.put('/store/:id', usersAuthMiddleware, UploadsConfig('store').single('avatar'), StoreController.update);
 
 export default userAuthRoutes;
