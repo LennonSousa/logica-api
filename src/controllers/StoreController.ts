@@ -15,6 +15,83 @@ export default {
         return response.json(storeView.render(store));
     },
 
+    async create(request: Request, response: Response) {
+        const { user_id } = request.params;
+
+        if (! await UsersRolesController.can(user_id, "store", "update"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        const {
+            title,
+            name,
+            phone,
+            description,
+            email,
+            zip_code,
+            street,
+            number,
+            neighborhood,
+            complement,
+            city,
+            state,
+            document,
+            services_in,
+            warranty,
+            engineer,
+        } = request.body;
+
+        const storeRepository = getCustomRepository(StoreRepository);
+
+        const data = {
+            title,
+            name,
+            avatar: '/logo-logica.svg',
+            phone,
+            description,
+            email,
+            zip_code,
+            street,
+            number,
+            neighborhood,
+            complement,
+            city,
+            state,
+            document,
+            services_in,
+            warranty,
+            engineer,
+        };
+
+        const schema = Yup.object().shape({
+            title: Yup.string().required(),
+            name: Yup.string().required(),
+            phone: Yup.string().notRequired(),
+            description: Yup.string().notRequired().nullable(),
+            email: Yup.string().notRequired(),
+            zip_code: Yup.string().notRequired(),
+            street: Yup.string().notRequired(),
+            number: Yup.string().notRequired(),
+            neighborhood: Yup.string().notRequired(),
+            complement: Yup.string().notRequired().nullable(),
+            city: Yup.string().required(),
+            state: Yup.string().required(),
+            document: Yup.string().required(),
+            services_in: Yup.string().notRequired().nullable(),
+            warranty: Yup.string().notRequired().nullable(),
+            engineer: Yup.string().notRequired().nullable(),
+        });
+
+        await schema.validate(data, {
+            abortEarly: false,
+        });
+
+        const store = storeRepository.create(data);
+
+        await storeRepository.save(store);
+
+        return response.status(201).json();
+    },
+
     async update(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
