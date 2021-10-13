@@ -6,6 +6,7 @@ import Event from './ProjectEventsModel';
 import AttachmentRequired from './ProjectAttachmentsRequiredModel';
 import Attachment from './ProjectAttachmentsModel';
 import Income from './IncomingsModel';
+import ServiceOrder from './ServiceOrdersModel';
 
 @Entity('projects')
 export default class ProjectsModel {
@@ -168,4 +169,8 @@ export default class ProjectsModel {
     })
     @JoinColumn({ name: 'project_id' })
     incomings: Income[];
+
+    @OneToMany(() => ServiceOrder, serviceOrder => serviceOrder.project)
+    @JoinColumn({ name: 'project_id' })
+    serviceOrders: ServiceOrder[];
 }

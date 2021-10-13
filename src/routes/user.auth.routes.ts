@@ -28,6 +28,7 @@ import RoofTypesController from '../controllers/RoofTypesController';
 import StoreController from '../controllers/StoreController';
 
 import usersAuthMiddleware from '../middlewares/usersAuth';
+import ServiceOrdersController from '../controllers/ServiceOrdersController';
 
 const userAuthRoutes = express.Router();
 
@@ -152,6 +153,12 @@ userAuthRoutes.get('/roofs/types/:id', usersAuthMiddleware, RoofTypesController.
 userAuthRoutes.post('/roofs/types', usersAuthMiddleware, RoofTypesController.create);
 userAuthRoutes.put('/roofs/types/:id', usersAuthMiddleware, RoofTypesController.update);
 userAuthRoutes.delete('/roofs/types/:id', usersAuthMiddleware, RoofTypesController.delete);
+
+userAuthRoutes.get('/services/orders', usersAuthMiddleware, ServiceOrdersController.index);
+userAuthRoutes.get('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.show);
+userAuthRoutes.post('/services/orders', usersAuthMiddleware, ServiceOrdersController.create);
+userAuthRoutes.put('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.update);
+userAuthRoutes.delete('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.delete);
 
 userAuthRoutes.get('/store', usersAuthMiddleware, StoreController.show);
 //userAuthRoutes.post('/store', usersAuthMiddleware, StoreController.create);

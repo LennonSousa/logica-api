@@ -119,6 +119,7 @@ export default {
                 'attachments.project',
                 'incomings',
                 'incomings.items',
+                'serviceOrders',
             ]
         });
 
