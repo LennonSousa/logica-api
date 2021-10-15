@@ -21,10 +21,10 @@ class Mailer {
 
     constructor() {
         const transporter = nodemailer.createTransport({
+            name: 'logicarenovaveis.com.br',
             host: process.env.EMAIL_HOST,
             port: Number(process.env.EMAIL_PORT),
             secure: true, // use TLS
-            requireTLS: true,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
