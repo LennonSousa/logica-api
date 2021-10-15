@@ -86,9 +86,6 @@ export default class ServiceOrdersModel {
     explanation: boolean;
 
     @Column()
-    technical: string;
-
-    @Column()
     start_at: Date;
 
     @Column()

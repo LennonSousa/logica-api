@@ -133,10 +133,6 @@ export class createServiceOrders1634154995516 implements MigrationInterface {
                         default: false,
                     },
                     {
-                        name: 'technical',
-                        type: 'varchar',
-                    },
-                    {
                         name: 'start_at',
                         type: 'datetime',
                         default: 'Now()',
@@ -149,18 +145,9 @@ export class createServiceOrders1634154995516 implements MigrationInterface {
                     {
                         name: 'project_id',
                         type: 'varchar',
+                        isNullable: true,
                     },
                 ],
-                foreignKeys: [
-                    {
-                        name: 'ProjectOnServiceOrder',
-                        columnNames: ['project_id'],
-                        referencedTableName: 'projects',
-                        referencedColumnNames: ['id'],
-                        onUpdate: 'CASCADE',
-                        onDelete: 'CASCADE',
-                    },
-                ]
             })
         );
     }

@@ -31,7 +31,6 @@ export default {
             test_meter: serviceOrder.test_meter,
             test_monitor: serviceOrder.test_monitor,
             explanation: serviceOrder.explanation,
-            technical: serviceOrder.technical,
             start_at: serviceOrder.start_at,
             finish_at: serviceOrder.finish_at,
             project: serviceOrder.project && projectView.render(serviceOrder.project),

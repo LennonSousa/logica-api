@@ -70,7 +70,6 @@ export default {
             test_meter,
             test_monitor,
             explanation,
-            technical,
             start_at,
             finish_at,
             project,
@@ -105,7 +104,6 @@ export default {
             test_meter,
             test_monitor,
             explanation,
-            technical,
             start_at,
             finish_at,
             project,
@@ -138,10 +136,9 @@ export default {
             test_meter: Yup.boolean().notRequired(),
             test_monitor: Yup.boolean().notRequired(),
             explanation: Yup.boolean().notRequired(),
-            technical: Yup.string().required(),
             start_at: Yup.date().notRequired(),
             finish_at: Yup.date().notRequired(),
-            project: Yup.string().required(),
+            project: Yup.string().notRequired(),
         });
 
         await schema.validate(data, {
@@ -188,7 +185,6 @@ export default {
             test_meter,
             test_monitor,
             explanation,
-            technical,
             start_at,
             finish_at,
         } = request.body;
@@ -222,7 +218,6 @@ export default {
             test_meter,
             test_monitor,
             explanation,
-            technical,
             start_at,
             finish_at,
         };
@@ -254,7 +249,6 @@ export default {
             test_meter: Yup.boolean().notRequired(),
             test_monitor: Yup.boolean().notRequired(),
             explanation: Yup.boolean().notRequired(),
-            technical: Yup.string().required(),
             start_at: Yup.date().notRequired(),
             finish_at: Yup.date().notRequired(),
         });
