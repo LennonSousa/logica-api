@@ -28,7 +28,11 @@ class Mailer {
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
-            }
+            },
+            tls: {
+                rejectUnauthorized: false,
+            },
+            debug: true,
         });
 
         this.client = transporter;
