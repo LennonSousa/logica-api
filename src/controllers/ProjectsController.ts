@@ -11,7 +11,7 @@ import ProjectsModel from '../models/ProjectsModel';
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
-        const { start, end, limit = 10, page = 1, name, user } = request.query;
+        const { start, end, limit = 10, page = 1, customer, user } = request.query;
 
         if (! await UsersRolesController.can(user_id, "projects", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
@@ -40,9 +40,9 @@ export default {
             return response.json(projectView.renderMany(projects));
         }
 
-        if (name) {
+        if (customer) {
             projects = await projectsRepository.find({
-                where: { name: Like(`%${name}%`) },
+                where: { customer: Like(`%${customer}%`) },
                 relations: [
                     'status',
                 ],

@@ -1,21 +1,69 @@
 import { Request, Response } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { Between, getCustomRepository, Like } from 'typeorm';
 import * as Yup from 'yup';
 
 import serviceOrderView from '../views/serviceOrderView';
 import { ServiceOrdersRepository } from '../repositories/ServiceOrdersRepository';
 import UsersRolesController from './UsersRolesController';
+import ServiceOrdersModel from '../models/ServiceOrdersModel';
 
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
+        const { start, end, limit = 10, page = 1, customer } = request.query;
 
         if (! await UsersRolesController.can(user_id, "services", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const serviceOrdersRepository = getCustomRepository(ServiceOrdersRepository);
 
-        const serviceOrders = await serviceOrdersRepository.find();
+        let serviceOrders: ServiceOrdersModel[] = [];
+
+        if (start && end) {
+            serviceOrders = await serviceOrdersRepository.find({
+                where: { start_at: Between(start, end) },
+                order: {
+                    start_at: "DESC"
+                },
+                take: Number(limit),
+                skip: ((Number(page) - 1) * Number(limit)),
+            });
+
+            const totalPages = Math.ceil(serviceOrders.length / Number(limit));
+
+            response.header('X-Total-Pages', String(totalPages));
+
+            return response.json(serviceOrderView.renderMany(serviceOrders));
+        }
+
+        if (customer) {
+            serviceOrders = await serviceOrdersRepository.find({
+                where: { customer: Like(`%${customer}%`) },
+                order: {
+                    start_at: "DESC"
+                },
+                take: Number(limit),
+                skip: ((Number(page) - 1) * Number(limit)),
+            });
+
+            const totalPages = Math.ceil(serviceOrders.length / Number(limit));
+
+            response.header('X-Total-Pages', String(totalPages));
+
+            return response.json(serviceOrderView.renderMany(serviceOrders));
+        }
+
+        serviceOrders = await serviceOrdersRepository.find({
+            order: {
+                start_at: "DESC"
+            },
+            take: Number(limit),
+            skip: ((Number(page) - 1) * Number(limit)),
+        });
+
+        const totalPages = Math.ceil(serviceOrders.length / Number(limit));
+
+        response.header('X-Total-Pages', String(totalPages));
 
         return response.json(serviceOrderView.renderMany(serviceOrders));
     },
