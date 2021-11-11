@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import Estimate from './EstimatesModel';
+import Incoming from './IncomingsModel';
+import Project from './ProjectsModel';
+import ServiceOrder from './ServiceOrdersModel';
+import User from './UsersModel';
 
 @Entity('store')
 export default class StoreModel {
@@ -55,4 +61,24 @@ export default class StoreModel {
 
     @Column()
     engineer: string;
+
+    @OneToMany(() => Estimate, estimate => estimate.store)
+    @JoinColumn({ name: 'store_id' })
+    estimates: Estimate[];
+
+    @OneToMany(() => Incoming, incoming => incoming.store)
+    @JoinColumn({ name: 'store_id' })
+    incomings: Incoming[];
+
+    @OneToMany(() => Project, project => project.store)
+    @JoinColumn({ name: 'store_id' })
+    projects: Project[];
+
+    @OneToMany(() => ServiceOrder, serviceOrder => serviceOrder.store)
+    @JoinColumn({ name: 'store_id' })
+    serviceOrders: ServiceOrder[];
+
+    @OneToMany(() => User, user => user.store)
+    @JoinColumn({ name: 'store_id' })
+    users: User[];
 }

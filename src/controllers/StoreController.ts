@@ -18,7 +18,7 @@ export default {
     async create(request: Request, response: Response) {
         const { user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "store", "update"))
+        if (! await UsersRolesController.can(user_id, "store", "create"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const {
@@ -42,10 +42,15 @@ export default {
 
         const storeRepository = getCustomRepository(StoreRepository);
 
+        if (!request.file)
+            return response.status(400).send({ error: 'Avatar is a required field!' });
+
+        const avatar = request.file as Express.Multer.File;
+
         const data = {
             title,
             name,
-            avatar: '/logo-logica.svg',
+            avatar: avatar.filename,
             phone,
             description,
             email,
@@ -65,6 +70,7 @@ export default {
         const schema = Yup.object().shape({
             title: Yup.string().required(),
             name: Yup.string().required(),
+            avatar: Yup.string().required(),
             phone: Yup.string().notRequired(),
             description: Yup.string().notRequired().nullable(),
             email: Yup.string().notRequired(),
@@ -89,7 +95,7 @@ export default {
 
         await storeRepository.save(store);
 
-        return response.status(201).json();
+        return response.status(201).json(storeView.render(store));
     },
 
     async update(request: Request, response: Response) {

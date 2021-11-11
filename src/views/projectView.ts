@@ -1,5 +1,6 @@
 import Project from '../models/ProjectsModel';
 import userView from './userView';
+import storeView from './storeView';
 import statusView from './projectStatusView';
 import projectEventView from './projectEventView';
 import projectAttachmentRequiredView from './projectAttachmentRequiredView';
@@ -55,6 +56,7 @@ export default {
             updated_by: project.updated_by,
             updated_at: project.updated_at,
             seller: project.seller && userView.render(project.seller),
+            store: project.store && storeView.render(project.store),
             status: project.status && statusView.render(project.status),
             events: project.events ? projectEventView.renderMany(project.events) : [],
             attachmentsRequired: project.attachmentsRequired ? projectAttachmentRequiredView.renderMany(project.attachmentsRequired) : [],

@@ -6,7 +6,7 @@ export default {
             id: store.id,
             title: store.title,
             name: store.name,
-            avatar: `${process.env.HOST_API}/uploads/store/${store.avatar}`,
+            avatar: `${process.env.HOST_API}/${process.env.UPLOADS_DIR}/stores/${store.avatar}`,
             phone: store.phone,
             description: store.description,
             email: store.email,

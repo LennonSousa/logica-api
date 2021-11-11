@@ -1,6 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
+import User from './UsersModel';
 import Project from './ProjectsModel';
+import Store from './StoreModel';
 
 @Entity('service_orders')
 export default class ServiceOrdersModel {
@@ -91,7 +93,21 @@ export default class ServiceOrdersModel {
     @Column()
     finish_at: Date;
 
+    @Column()
+    technical: string;
+
+    @Column()
+    created_by: string;
+
+    @ManyToOne(() => User, user => user.serviceOrders)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
+
     @ManyToOne(() => Project, project => project.serviceOrders)
     @JoinColumn({ name: 'project_id' })
     project: Project;
+
+    @ManyToOne(() => Store, store => store.serviceOrders)
+    @JoinColumn({ name: 'store_id' })
+    store: Store;
 }

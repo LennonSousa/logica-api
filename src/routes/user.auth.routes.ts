@@ -32,7 +32,7 @@ import ServiceOrdersController from '../controllers/ServiceOrdersController';
 
 const userAuthRoutes = express.Router();
 
-userAuthRoutes.get('/users/authenticated', usersAuthMiddleware, function (request, response) {
+userAuthRoutes.get('/users/authenticated', usersAuthMiddleware, function (_request, response) {
     return response.status(202).json();
 });
 
@@ -160,8 +160,8 @@ userAuthRoutes.post('/services/orders', usersAuthMiddleware, ServiceOrdersContro
 userAuthRoutes.put('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.update);
 userAuthRoutes.delete('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.delete);
 
-userAuthRoutes.get('/store', usersAuthMiddleware, StoreController.show);
-//userAuthRoutes.post('/store', usersAuthMiddleware, StoreController.create);
-userAuthRoutes.put('/store/:id', usersAuthMiddleware, UploadsConfig('store').single('avatar'), StoreController.update);
+userAuthRoutes.get('/stores', usersAuthMiddleware, StoreController.show);
+userAuthRoutes.post('/stores', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoreController.create);
+userAuthRoutes.put('/stores/:id', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoreController.update);
 
 export default userAuthRoutes;

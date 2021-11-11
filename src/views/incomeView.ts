@@ -1,4 +1,5 @@
 import Income from '../models/IncomingsModel';
+import storeView from './storeView';
 import projectView from './projectView';
 import payTypeView from './payTypeView';
 import incomeItemView from './incomeItemView';
@@ -11,6 +12,8 @@ export default {
             description: income.description,
             value: income.value,
             created_at: income.created_at,
+            created_by: income.created_by,
+            store: income.store && storeView.render(income.store),
             project: income.project && projectView.render(income.project),
             payType: income.payType && payTypeView.render(income.payType),
             items: income.items ? incomeItemView.renderMany(income.items) : [],

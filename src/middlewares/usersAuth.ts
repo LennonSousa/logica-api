@@ -1,8 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from "jsonwebtoken";
 
+const publicRoutes = [
+    '/uploads/stores',
+];
+
 export default (request: Request, response: Response, next: NextFunction) => {
     const authHeader = request.headers.authorization;
+
+    if (publicRoutes.find(item => {
+        return item === request.originalUrl.slice(0, request.originalUrl.lastIndexOf('/') === 0 ? undefined : request.originalUrl.lastIndexOf('/'))
+    }))
+        return next();
 
     if (!authHeader)
         return response.status(401).send({ error: 'No token provided user auth' });

@@ -1,5 +1,7 @@
 import ServiceOrder from '../models/ServiceOrdersModel';
+import userView from './userView';
 import projectView from './projectView';
+import storeView from './storeView';
 
 export default {
     render(serviceOrder: ServiceOrder) {
@@ -33,7 +35,11 @@ export default {
             explanation: serviceOrder.explanation,
             start_at: serviceOrder.start_at,
             finish_at: serviceOrder.finish_at,
+            technical: serviceOrder.technical,
+            created_by: serviceOrder.created_by,
+            user: serviceOrder.user && userView.render(serviceOrder.user),
             project: serviceOrder.project && projectView.render(serviceOrder.project),
+            store: serviceOrder.store && storeView.render(serviceOrder.store),
         }
     },
 

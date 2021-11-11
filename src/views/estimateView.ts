@@ -1,5 +1,6 @@
 import Estimate from '../models/EstimatesModel';
 import userView from './userView';
+import storeView from './storeView';
 import panelView from './panelView';
 import roofOrientationView from './roofOrientationView';
 import roofTypeView from './roofTypeView';
@@ -11,6 +12,7 @@ export default {
         return {
             id: estimate.id,
             customer: estimate.customer,
+            customer_from: estimate.customer_from,
             document: estimate.document,
             phone: estimate.phone,
             cellphone: estimate.cellphone,
@@ -53,6 +55,7 @@ export default {
             updated_by: estimate.updated_by,
             updated_at: estimate.updated_at,
             user: estimate.user && userView.render(estimate.user),
+            store: estimate.store && storeView.render(estimate.store),
             panel: estimate.panel && panelView.render(estimate.panel),
             roof_orientation: estimate.roof_orientation && roofOrientationView.render(estimate.roof_orientation),
             roof_type: estimate.roof_type && roofTypeView.render(estimate.roof_type),

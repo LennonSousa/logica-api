@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 
 import incomingsView from '../views/incomeView';
 import { IncomingsRepository } from '../repositories/IncomingsRepository';
+import { UsersRepository } from '../repositories/UsersRepository';
 import UsersRolesController from './UsersRolesController';
 
 export default {
@@ -55,6 +56,7 @@ export default {
         const {
             description,
             value,
+            store,
             project,
             payType,
             items,
@@ -62,9 +64,15 @@ export default {
 
         const incomingsRepository = getCustomRepository(IncomingsRepository);
 
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id);
+
         const data = {
             description,
             value,
+            created_by: userCreator.name,
+            store,
             project,
             payType,
             items,
@@ -73,6 +81,7 @@ export default {
         const schema = Yup.object().shape({
             description: Yup.string().required(),
             value: Yup.number().required(),
+            store: Yup.string().required(),
             project: Yup.string().notRequired(),
             payType: Yup.string().required(),
             items: Yup.array(
@@ -105,6 +114,7 @@ export default {
         const {
             description,
             value,
+            store,
             project,
             payType,
             items,
@@ -115,6 +125,7 @@ export default {
         const data = {
             description,
             value,
+            store,
             project,
             payType,
             items,
@@ -123,6 +134,7 @@ export default {
         const schema = Yup.object().shape({
             description: Yup.string().required(),
             value: Yup.number().required(),
+            store: Yup.string().required(),
             project: Yup.string().notRequired().nullable(),
             payType: Yup.string().required(),
         });

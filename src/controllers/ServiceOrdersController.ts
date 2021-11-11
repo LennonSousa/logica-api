@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 
 import serviceOrderView from '../views/serviceOrderView';
 import { ServiceOrdersRepository } from '../repositories/ServiceOrdersRepository';
+import { UsersRepository } from '../repositories/UsersRepository';
 import UsersRolesController from './UsersRolesController';
 import ServiceOrdersModel from '../models/ServiceOrdersModel';
 
@@ -120,10 +121,16 @@ export default {
             explanation,
             start_at,
             finish_at,
+            technical,
             project,
+            store,
         } = request.body;
 
         const serviceOrdersRepository = getCustomRepository(ServiceOrdersRepository);
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id);
 
         const data = {
             customer,
@@ -154,7 +161,11 @@ export default {
             explanation,
             start_at,
             finish_at,
+            technical,
+            created_by: userCreator.name,
+            user: userCreator,
             project,
+            store,
         };
 
         const schema = Yup.object().shape({
@@ -186,7 +197,10 @@ export default {
             explanation: Yup.boolean().notRequired(),
             start_at: Yup.date().notRequired(),
             finish_at: Yup.date().notRequired(),
+            technical: Yup.string().required(),
+            created_by: Yup.string().required(),
             project: Yup.string().notRequired(),
+            store: Yup.string().required(),
         });
 
         await schema.validate(data, {
@@ -235,6 +249,8 @@ export default {
             explanation,
             start_at,
             finish_at,
+            technical,
+            store,
         } = request.body;
 
         const serviceOrdersRepository = getCustomRepository(ServiceOrdersRepository);
@@ -268,6 +284,8 @@ export default {
             explanation,
             start_at,
             finish_at,
+            technical,
+            store,
         };
 
         const schema = Yup.object().shape({
@@ -299,6 +317,8 @@ export default {
             explanation: Yup.boolean().notRequired(),
             start_at: Yup.date().notRequired(),
             finish_at: Yup.date().notRequired(),
+            technical: Yup.string().required(),
+            store: Yup.string().required(),
         });
 
         await schema.validate(data, {

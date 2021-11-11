@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import User from './UsersModel';
+import Store from './StoreModel';
 import ProjectStatus from './ProjectStatusModel';
 import Event from './ProjectEventsModel';
 import AttachmentRequired from './ProjectAttachmentsRequiredModel';
@@ -145,6 +146,10 @@ export default class ProjectsModel {
     @ManyToOne(() => User, user => user.estimates)
     @JoinColumn({ name: 'seller_id' })
     seller: User;
+
+    @ManyToOne(() => Store, store => store.projects)
+    @JoinColumn({ name: 'store_id' })
+    store: Store;
 
     @ManyToOne(() => ProjectStatus, projectStatus => projectStatus.projects)
     @JoinColumn({ name: 'status_id' })

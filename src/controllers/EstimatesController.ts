@@ -129,6 +129,7 @@ export default {
 
         const {
             customer,
+            customer_from,
             document,
             phone,
             cellphone,
@@ -168,6 +169,7 @@ export default {
             notes,
             created_at,
             updated_at,
+            store,
             panel,
             roof_orientation,
             roof_type,
@@ -183,6 +185,7 @@ export default {
 
         const data = {
             customer,
+            customer_from,
             document,
             phone,
             cellphone,
@@ -225,6 +228,7 @@ export default {
             updated_by: userCreator.name,
             updated_at,
             user: userCreator,
+            store,
             panel,
             roof_orientation,
             roof_type,
@@ -234,6 +238,7 @@ export default {
 
         const schema = Yup.object().shape({
             customer: Yup.string().required(),
+            customer_from: Yup.string().required(),
             document: Yup.string().required(),
             phone: Yup.string().notRequired(),
             cellphone: Yup.string().notRequired().nullable(),
@@ -273,6 +278,7 @@ export default {
             notes: Yup.string().notRequired().nullable(),
             created_by: Yup.string().required(),
             updated_by: Yup.string().required(),
+            store: Yup.string().required(),
             panel: Yup.string().required(),
             roof_orientation: Yup.string().required(),
             roof_type: Yup.string().required(),
@@ -307,6 +313,7 @@ export default {
 
         const {
             customer,
+            customer_from,
             document,
             phone,
             cellphone,
@@ -358,6 +365,7 @@ export default {
 
         const data = {
             customer,
+            customer_from,
             document,
             phone,
             cellphone,
@@ -405,6 +413,7 @@ export default {
 
         const schema = Yup.object().shape({
             customer: Yup.string().required(),
+            customer_from: Yup.string().required(),
             document: Yup.string().required(),
             phone: Yup.string().notRequired(),
             cellphone: Yup.string().notRequired().nullable(),
@@ -444,6 +453,7 @@ export default {
             notes: Yup.string().notRequired().nullable(),
             updated_by: Yup.string().required(),
             updated_at: Yup.date().required(),
+            store: Yup.string().required(),
             panel: Yup.string().required(),
             roof_orientation: Yup.string().required(),
             roof_type: Yup.string().required(),

@@ -4,6 +4,10 @@ node_modules
 
 docker-compose.yml
 
-!/uploads/.gitkeep
+/uploads/incomings/*
+/uploads/projects/*
+/uploads/stores/*
+
 !/uploads/projects/.gitkeep
 !/uploads/incomings/.gitkeep
+!/uploads/stores/.gitkeep

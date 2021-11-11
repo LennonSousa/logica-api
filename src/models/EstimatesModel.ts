@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 
 import Panel from './PanelsModel';
 import User from './UsersModel';
+import Store from './StoreModel';
 import RoofOrientation from './RoofOrientationsModel';
 import RoofType from './RoofTypesModel';
 import EstimateStatus from './EstimateStatusModel';
@@ -14,6 +15,9 @@ export default class EstimatesModel {
 
     @Column()
     customer: string;
+
+    @Column()
+    customer_from: string;
 
     @Column()
     document: string;
@@ -141,6 +145,10 @@ export default class EstimatesModel {
     @ManyToOne(() => User, user => user.estimates)
     @JoinColumn({ name: 'user_id' })
     user: User;
+
+    @ManyToOne(() => Store, store => store.estimates)
+    @JoinColumn({ name: 'store_id' })
+    store: Store;
 
     @ManyToOne(() => Panel, panel => panel.estimates)
     @JoinColumn({ name: 'panel_id' })

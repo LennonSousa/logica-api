@@ -1,8 +1,10 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import Store from './StoreModel';
 import Role from './UsersRolesModel';
 import Reset from './UsersResetsModel';
 import Estimate from './EstimatesModel';
+import ServiceOrder from './ServiceOrdersModel';
 
 @Entity('users')
 export default class UsersModel {
@@ -11,6 +13,9 @@ export default class UsersModel {
 
     @Column()
     name: string;
+
+    @Column()
+    document: string;
 
     @Column()
     phone: string;
@@ -31,6 +36,13 @@ export default class UsersModel {
     root: boolean;
 
     @Column()
+    store_only: boolean;
+
+    @ManyToOne(() => Store, store => store.users)
+    @JoinColumn({ name: 'store_id' })
+    store: Store;
+
+    @Column()
     created_at: Date;
 
     @OneToMany(() => Role, role => role.user, {
@@ -46,4 +58,8 @@ export default class UsersModel {
     @OneToMany(() => Estimate, estimate => estimate.user)
     @JoinColumn({ name: 'user_id' })
     estimates: Estimate[];
+
+    @OneToMany(() => ServiceOrder, serviceOrder => serviceOrder.user)
+    @JoinColumn({ name: 'user_id' })
+    serviceOrders: ServiceOrder[];
 }

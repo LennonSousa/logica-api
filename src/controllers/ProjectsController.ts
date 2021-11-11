@@ -172,6 +172,7 @@ export default {
             financier_complement,
             financier_city,
             financier_state,
+            store,
             status,
             events
         } = request.body;
@@ -222,6 +223,7 @@ export default {
             financier_complement,
             financier_city,
             financier_state,
+            store,
             seller: userCreator,
             status,
             events,
@@ -271,6 +273,7 @@ export default {
             financier_state: Yup.string().required(),
             created_by: Yup.string().required(),
             updated_by: Yup.string().required(),
+            store: Yup.string().required(),
             status: Yup.string().required(),
             events: Yup.array(
                 Yup.object().shape({
@@ -355,6 +358,7 @@ export default {
             financier_complement,
             financier_city,
             financier_state,
+            store,
             status,
         } = request.body;
 
@@ -404,6 +408,7 @@ export default {
             financier_complement,
             financier_city,
             financier_state,
+            store,
             status,
             updated_by: userCreator.name,
             updated_at: new Date(),
@@ -450,6 +455,7 @@ export default {
             financier_city: Yup.string().required(),
             financier_state: Yup.string().required(),
             updated_by: Yup.string().required(),
+            store: Yup.string().required(),
             status: Yup.string().required(),
         });
 

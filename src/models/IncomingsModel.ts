@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
+import Store from './StoreModel';
 import Project from './ProjectsModel';
 import PayType from './PayTypesModel';
 import IncomeItem from './IncomeItemsModel';
@@ -18,6 +19,13 @@ export default class IncomingsModel {
 
     @Column()
     created_at: Date;
+
+    @Column()
+    created_by: string;
+
+    @ManyToOne(() => Store, store => store.incomings)
+    @JoinColumn({ name: 'store_id' })
+    store: Store;
 
     @ManyToOne(() => Project, project => project.attachments)
     @JoinColumn({ name: 'project_id' })

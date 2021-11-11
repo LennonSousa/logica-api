@@ -55,8 +55,11 @@ export default {
 
         const {
             name,
+            document,
             phone,
             email,
+            store_only,
+            store,
             roles
         } = request.body;
 
@@ -64,15 +67,21 @@ export default {
 
         const data = {
             name,
+            document,
             phone,
             email,
+            store_only,
+            store,
             roles
         };
 
         const schema = Yup.object().shape({
             name: Yup.string().required(),
+            document: Yup.string().required(),
             phone: Yup.string().notRequired(),
             email: Yup.string().required(),
+            store_only: Yup.boolean().notRequired(),
+            store: Yup.string().required(),
             roles: Yup.array(
                 Yup.object().shape({
                     role: Yup.string().required(),
@@ -95,11 +104,14 @@ export default {
 
         const newUser = usersRepository.create({
             name,
+            document,
             phone,
             email,
             password: hash,
             active: false,
             paused: false,
+            store_only,
+            store,
             roles
         });
 
@@ -136,22 +148,31 @@ export default {
 
         const {
             name,
+            document,
             phone,
             paused,
+            store_only,
+            store,
         } = request.body;
 
         const usersRepository = getCustomRepository(UsersRepository);
 
         const data = {
             name,
+            document,
             phone,
             paused,
+            store_only,
+            store,
         };
 
         const schema = Yup.object().shape({
             name: Yup.string().required(),
+            document: Yup.string().required(),
             phone: Yup.string().notRequired().nullable(),
             paused: Yup.boolean().notRequired(),
+            store_only: Yup.boolean().notRequired(),
+            store: Yup.string().required(),
         });
 
         await schema.validate(data, {
@@ -168,7 +189,11 @@ export default {
     async delete(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "users", "remove"))
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userToDelete = await userRepository.findOneOrFail(id);
+
+        if (!userToDelete.root && ! await UsersRolesController.can(user_id, "users", "remove"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const usersRepository = getCustomRepository(UsersRepository);

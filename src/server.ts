@@ -1,11 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import 'express-async-errors';
 
 import './database/connection';
 import errorHandler from './errors/handler';
 import userPublicRoutes from './routes/user.public.routes';
 import userAuthRoutes from './routes/user.auth.routes';
+import usersAuthMiddleware from './middlewares/usersAuth';
 
 require('dotenv/config');
 
@@ -23,6 +25,7 @@ app.use(express.json());
 
 app.use(userPublicRoutes);
 app.use(userAuthRoutes);
+app.use('/uploads', usersAuthMiddleware, express.static(path.join(__dirname, '..', 'uploads')));
 app.use(errorHandler);
 
 app.listen(process.env.PORT || 3333, () => {
