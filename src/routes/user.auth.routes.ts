@@ -160,7 +160,8 @@ userAuthRoutes.post('/services/orders', usersAuthMiddleware, ServiceOrdersContro
 userAuthRoutes.put('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.update);
 userAuthRoutes.delete('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.delete);
 
-userAuthRoutes.get('/stores', usersAuthMiddleware, StoreController.show);
+userAuthRoutes.get('/stores', usersAuthMiddleware, StoreController.index);
+userAuthRoutes.get('/stores/:id', usersAuthMiddleware, StoreController.show);
 userAuthRoutes.post('/stores', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoreController.create);
 userAuthRoutes.put('/stores/:id', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoreController.update);
 

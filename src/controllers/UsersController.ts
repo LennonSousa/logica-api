@@ -19,7 +19,9 @@ export default {
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const users = await usersRepository.find({
-            relations: ['roles'],
+            relations: [
+                'roles',
+            ],
             order: {
                 created_at: "ASC"
             },
@@ -41,6 +43,7 @@ export default {
         const user = await usersRepository.findOneOrFail(id, {
             relations: [
                 'roles',
+                'store',
             ]
         });
 
@@ -81,7 +84,7 @@ export default {
             phone: Yup.string().notRequired(),
             email: Yup.string().required(),
             store_only: Yup.boolean().notRequired(),
-            store: Yup.string().required(),
+            store: Yup.string().notRequired(),
             roles: Yup.array(
                 Yup.object().shape({
                     role: Yup.string().required(),
@@ -172,7 +175,7 @@ export default {
             phone: Yup.string().notRequired().nullable(),
             paused: Yup.boolean().notRequired(),
             store_only: Yup.boolean().notRequired(),
-            store: Yup.string().required(),
+            store: Yup.string().notRequired(),
         });
 
         await schema.validate(data, {

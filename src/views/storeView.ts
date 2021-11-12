@@ -23,4 +23,8 @@ export default {
             engineer: store.engineer,
         }
     },
+
+    renderMany(stores: Store[]) {
+        return stores.map(store => this.render(store));
+    }
 }

@@ -7,10 +7,23 @@ import { StoreRepository } from '../repositories/StoreRepository';
 import UsersRolesController from './UsersRolesController';
 
 export default {
-    async show(request: Request, response: Response) {
+    async index(_request: Request, response: Response) {
         const storeRepository = getCustomRepository(StoreRepository);
 
-        const store = await storeRepository.findOneOrFail();
+        const stores = await storeRepository.find();
+
+        return response.json(storeView.renderMany(stores));
+    },
+
+    async show(request: Request, response: Response) {
+        const { id, user_id } = request.params;
+
+        if (! await UsersRolesController.can(user_id, "store", "view"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        const storeRepository = getCustomRepository(StoreRepository);
+
+        const store = await storeRepository.findOneOrFail(id);
 
         return response.json(storeView.render(store));
     },
