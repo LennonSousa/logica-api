@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class createEstimates1625834863810 implements MigrationInterface {
+export class createEstimates1625866611342 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table
@@ -17,6 +17,10 @@ export class createEstimates1625834863810 implements MigrationInterface {
                     {
                         name: 'customer',
                         type: 'varchar',
+                    },
+                    {
+                        name: 'customer_from',
+                        type: 'ENUM(\'site\', \'social\', \'customer\', \'internet\', \'street\')',
                     },
                     {
                         name: 'customer_id',
@@ -256,6 +260,10 @@ export class createEstimates1625834863810 implements MigrationInterface {
                         default: 'now()',
                     },
                     {
+                        name: 'store_id',
+                        type: 'varchar',
+                    },
+                    {
                         name: 'user_id',
                         type: 'varchar',
                         isNullable: true,
@@ -278,6 +286,14 @@ export class createEstimates1625834863810 implements MigrationInterface {
                     },
                 ],
                 foreignKeys: [
+                    {
+                        name: 'StoreOnEstimate',
+                        columnNames: ['store_id'],
+                        referencedTableName: 'stores',
+                        referencedColumnNames: ['id'],
+                        onUpdate: 'CASCADE',
+                        onDelete: 'RESTRICT',
+                    },
                     {
                         name: 'PanelOnEstimate',
                         columnNames: ['panel_id'],

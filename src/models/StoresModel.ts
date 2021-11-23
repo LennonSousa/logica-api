@@ -6,8 +6,8 @@ import Project from './ProjectsModel';
 import ServiceOrder from './ServiceOrdersModel';
 import User from './UsersModel';
 
-@Entity('store')
-export default class StoreModel {
+@Entity('stores')
+export default class StoresModel {
     @PrimaryGeneratedColumn('uuid')
     readonly id: string;
 
@@ -61,6 +61,9 @@ export default class StoreModel {
 
     @Column()
     engineer: string;
+
+    @Column()
+    active: boolean;
 
     @OneToMany(() => Estimate, estimate => estimate.store)
     @JoinColumn({ name: 'store_id' })

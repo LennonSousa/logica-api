@@ -1,10 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import Store from './StoreModel';
+import Store from './StoresModel';
 import Role from './UsersRolesModel';
 import Reset from './UsersResetsModel';
 import Estimate from './EstimatesModel';
 import ServiceOrder from './ServiceOrdersModel';
+import Share from './NoteSharesModel';
 
 @Entity('users')
 export default class UsersModel {
@@ -62,4 +63,8 @@ export default class UsersModel {
     @OneToMany(() => ServiceOrder, serviceOrder => serviceOrder.user)
     @JoinColumn({ name: 'user_id' })
     serviceOrders: ServiceOrder[];
+
+    @OneToMany(() => Share, share => share.user)
+    @JoinColumn({ name: 'user_id' })
+    notes: Share[];
 }

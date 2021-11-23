@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 
 import Panel from './PanelsModel';
 import User from './UsersModel';
-import Store from './StoreModel';
+import Store from './StoresModel';
 import RoofOrientation from './RoofOrientationsModel';
 import RoofType from './RoofTypesModel';
 import EstimateStatus from './EstimateStatusModel';

@@ -36,6 +36,7 @@ export default {
 
         const income = await incomingsRepository.findOneOrFail(id, {
             relations: [
+                'store',
                 'project',
                 'payType',
                 'items',

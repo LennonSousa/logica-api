@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 't
 
 import User from './UsersModel';
 import Project from './ProjectsModel';
-import Store from './StoreModel';
+import Store from './StoresModel';
 
 @Entity('service_orders')
 export default class ServiceOrdersModel {

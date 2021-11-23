@@ -109,6 +109,7 @@ export default {
         const estimate = await estimatesRepository.findOneOrFail(id, {
             relations: [
                 'user',
+                'store',
                 'panel',
                 'panel.prices',
                 'roof_orientation',
@@ -238,7 +239,9 @@ export default {
 
         const schema = Yup.object().shape({
             customer: Yup.string().required(),
-            customer_from: Yup.string().required(),
+            customer_from: Yup.mixed().oneOf([
+                'site', 'social', 'customer', 'internet', 'street'
+            ]).required(),
             document: Yup.string().required(),
             phone: Yup.string().notRequired(),
             cellphone: Yup.string().notRequired().nullable(),
@@ -351,6 +354,7 @@ export default {
             show_values,
             show_discount,
             notes,
+            store,
             panel,
             roof_orientation,
             roof_type,
@@ -405,6 +409,7 @@ export default {
             notes,
             updated_by: userCreator.name,
             updated_at: new Date(),
+            store,
             panel,
             roof_orientation,
             roof_type,
@@ -413,7 +418,9 @@ export default {
 
         const schema = Yup.object().shape({
             customer: Yup.string().required(),
-            customer_from: Yup.string().required(),
+            customer_from: Yup.mixed().oneOf([
+                'site', 'social', 'customer', 'internet', 'street'
+            ]).required(),
             document: Yup.string().required(),
             phone: Yup.string().notRequired(),
             cellphone: Yup.string().notRequired().nullable(),

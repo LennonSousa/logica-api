@@ -108,6 +108,7 @@ export default {
 
         const project = await projectsRepository.findOneOrFail(id, {
             relations: [
+                'store',
                 'seller',
                 'status',
                 'events',

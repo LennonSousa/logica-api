@@ -224,11 +224,23 @@ export class createProjects1627480401183 implements MigrationInterface {
                         isNullable: true,
                     },
                     {
+                        name: 'store_id',
+                        type: 'varchar',
+                    },
+                    {
                         name: 'status_id',
                         type: 'varchar',
                     },
                 ],
                 foreignKeys: [
+                    {
+                        name: 'StoreOnProject',
+                        columnNames: ['store_id'],
+                        referencedTableName: 'stores',
+                        referencedColumnNames: ['id'],
+                        onUpdate: 'CASCADE',
+                        onDelete: 'RESTRICT',
+                    },
                     {
                         name: 'StatusOnProject',
                         columnNames: ['status_id'],

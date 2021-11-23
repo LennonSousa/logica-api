@@ -15,6 +15,9 @@ import EventsProjectController from '../controllers/EventsProjectController';
 import IncomeAttachmentsController from '../controllers/IncomeAttachmentsController';
 import IncomeItemsController from '../controllers/IncomeItemsController';
 import IncomingsController from '../controllers/IncomingsController';
+import NotesController from '../controllers/NotesController';
+import NoteAttachmentsController from '../controllers/NoteAttachmentsController';
+import NoteSharesController from '../controllers/NoteSharesController';
 import PanelPricesController from '../controllers/PanelPricesController';
 import PanelsController from '../controllers/PanelsController';
 import PayTypesController from '../controllers/PayTypesController';
@@ -25,7 +28,7 @@ import ProjectsController from '../controllers/ProjectsController';
 import ProjectStatusController from '../controllers/ProjectStatusController';
 import RoofOrientationsController from '../controllers/RoofOrientationsController';
 import RoofTypesController from '../controllers/RoofTypesController';
-import StoreController from '../controllers/StoreController';
+import StoresController from '../controllers/StoresController';
 
 import usersAuthMiddleware from '../middlewares/usersAuth';
 import ServiceOrdersController from '../controllers/ServiceOrdersController';
@@ -96,6 +99,20 @@ userAuthRoutes.post('/incomings', usersAuthMiddleware, IncomingsController.creat
 userAuthRoutes.put('/incomings/:id', usersAuthMiddleware, IncomingsController.update);
 userAuthRoutes.delete('/incomings/:id', usersAuthMiddleware, IncomingsController.delete);
 
+userAuthRoutes.get('/notes', usersAuthMiddleware, NotesController.index);
+userAuthRoutes.get('/notes/:id', usersAuthMiddleware, NotesController.show);
+userAuthRoutes.post('/notes', usersAuthMiddleware, NotesController.create);
+userAuthRoutes.put('/notes/:id', usersAuthMiddleware, NotesController.update);
+userAuthRoutes.delete('/notes/:id', usersAuthMiddleware, NotesController.delete);
+
+userAuthRoutes.post('/notes/attachments', usersAuthMiddleware, UploadsConfig('notes').single('file'), NoteAttachmentsController.create);
+userAuthRoutes.put('/notes/attachments/:id', usersAuthMiddleware, NoteAttachmentsController.update);
+userAuthRoutes.delete('/notes/attachments/:id', usersAuthMiddleware, NoteAttachmentsController.delete);
+
+userAuthRoutes.post('/notes/shares', usersAuthMiddleware, NoteSharesController.create);
+userAuthRoutes.put('/notes/shares/:id', usersAuthMiddleware, NoteSharesController.update);
+userAuthRoutes.delete('/notes/shares/:id', usersAuthMiddleware, NoteSharesController.delete);
+
 userAuthRoutes.get('/panels/prices', usersAuthMiddleware, PanelPricesController.index);
 userAuthRoutes.get('/panels/prices/:id', usersAuthMiddleware, PanelPricesController.show);
 userAuthRoutes.post('/panels/prices', usersAuthMiddleware, PanelPricesController.create);
@@ -160,9 +177,10 @@ userAuthRoutes.post('/services/orders', usersAuthMiddleware, ServiceOrdersContro
 userAuthRoutes.put('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.update);
 userAuthRoutes.delete('/services/orders/:id', usersAuthMiddleware, ServiceOrdersController.delete);
 
-userAuthRoutes.get('/stores', usersAuthMiddleware, StoreController.index);
-userAuthRoutes.get('/stores/:id', usersAuthMiddleware, StoreController.show);
-userAuthRoutes.post('/stores', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoreController.create);
-userAuthRoutes.put('/stores/:id', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoreController.update);
+userAuthRoutes.get('/stores', usersAuthMiddleware, StoresController.index);
+userAuthRoutes.get('/stores/:id', usersAuthMiddleware, StoresController.show);
+userAuthRoutes.post('/stores', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoresController.create);
+userAuthRoutes.put('/stores/:id', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoresController.update);
+userAuthRoutes.delete('/stores/:id', usersAuthMiddleware, StoresController.delete);
 
 export default userAuthRoutes;

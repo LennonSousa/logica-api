@@ -143,9 +143,36 @@ export class createServiceOrders1634154995516 implements MigrationInterface {
                         default: 'Now()',
                     },
                     {
+                        name: 'technical',
+                        type: 'varchar',
+                    },
+                    {
+                        name: 'created_by',
+                        type: 'varchar',
+                    },
+                    {
+                        name: 'user_id',
+                        type: 'varchar',
+                        isNullable: true,
+                    },
+                    {
+                        name: 'store_id',
+                        type: 'varchar',
+                    },
+                    {
                         name: 'project_id',
                         type: 'varchar',
                         isNullable: true,
+                    },
+                ],
+                foreignKeys: [
+                    {
+                        name: 'StoreOnServiceOrder',
+                        columnNames: ['store_id'],
+                        referencedTableName: 'stores',
+                        referencedColumnNames: ['id'],
+                        onUpdate: 'CASCADE',
+                        onDelete: 'RESTRICT',
                     },
                 ],
             })

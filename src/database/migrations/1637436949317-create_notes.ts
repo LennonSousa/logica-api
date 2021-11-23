@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class createUsers1625832127143 implements MigrationInterface {
+export class createNotes1637436949317 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
-            name: 'users',
+            name: 'notes',
             columns: [
                 {
                     name: 'id',
@@ -14,40 +14,31 @@ export class createUsers1625832127143 implements MigrationInterface {
                     generationStrategy: 'uuid'
                 },
                 {
-                    name: 'name',
+                    name: 'title',
                     type: 'varchar',
                 },
                 {
-                    name: 'document',
-                    type: 'varchar',
-                },
-                {
-                    name: 'phone',
-                    type: 'varchar(50)',
+                    name: 'text',
+                    type: 'text',
                     isNullable: true,
                 },
                 {
-                    name: 'email',
+                    name: 'created_by',
                     type: 'varchar',
                 },
                 {
-                    name: 'password',
-                    type: 'varchar'
+                    name: 'created_at',
+                    type: 'datetime',
+                    default: 'now()',
                 },
                 {
-                    name: 'active',
-                    type: 'boolean',
-                    default: false,
+                    name: 'updated_by',
+                    type: 'varchar',
                 },
                 {
-                    name: 'paused',
-                    type: 'boolean',
-                    default: false,
-                },
-                {
-                    name: 'root',
-                    type: 'boolean',
-                    default: false,
+                    name: 'updated_at',
+                    type: 'datetime',
+                    default: 'now()',
                 },
                 {
                     name: 'store_only',
@@ -59,16 +50,12 @@ export class createUsers1625832127143 implements MigrationInterface {
                     type: 'varchar',
                     isNullable: true,
                 },
-                {
-                    name: 'created_at',
-                    type: 'datetime',
-                    default: 'now()',
-                },
             ],
         }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('users');
+        await queryRunner.dropTable('notes');
     }
+
 }

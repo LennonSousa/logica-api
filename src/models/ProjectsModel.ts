@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import User from './UsersModel';
-import Store from './StoreModel';
+import Store from './StoresModel';
 import ProjectStatus from './ProjectStatusModel';
 import Event from './ProjectEventsModel';
 import AttachmentRequired from './ProjectAttachmentsRequiredModel';

@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import Store from './StoreModel';
+import Store from './StoresModel';
 import Project from './ProjectsModel';
 import PayType from './PayTypesModel';
 import IncomeItem from './IncomeItemsModel';

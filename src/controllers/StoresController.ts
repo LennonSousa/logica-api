@@ -3,12 +3,12 @@ import { getCustomRepository } from 'typeorm';
 import * as Yup from 'yup';
 
 import storeView from '../views/storeView';
-import { StoreRepository } from '../repositories/StoreRepository';
+import { StoresRepository } from '../repositories/StoresRepository';
 import UsersRolesController from './UsersRolesController';
 
 export default {
     async index(_request: Request, response: Response) {
-        const storeRepository = getCustomRepository(StoreRepository);
+        const storeRepository = getCustomRepository(StoresRepository);
 
         const stores = await storeRepository.find();
 
@@ -21,7 +21,7 @@ export default {
         if (! await UsersRolesController.can(user_id, "store", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
-        const storeRepository = getCustomRepository(StoreRepository);
+        const storeRepository = getCustomRepository(StoresRepository);
 
         const store = await storeRepository.findOneOrFail(id);
 
@@ -53,7 +53,7 @@ export default {
             engineer,
         } = request.body;
 
-        const storeRepository = getCustomRepository(StoreRepository);
+        const storeRepository = getCustomRepository(StoresRepository);
 
         if (!request.file)
             return response.status(400).send({ error: 'Avatar is a required field!' });
@@ -136,7 +136,7 @@ export default {
             engineer,
         } = request.body;
 
-        const storeRepository = getCustomRepository(StoreRepository);
+        const storeRepository = getCustomRepository(StoresRepository);
 
         if (request.file) {
             const avatar = request.file as Express.Multer.File;
@@ -240,4 +240,17 @@ export default {
 
         return response.status(204).json();
     },
+
+    async delete(request: Request, response: Response) {
+        const { id, user_id } = request.params;
+
+        if (! await UsersRolesController.can(user_id, "store", "remove"))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        const storesRepository = getCustomRepository(StoresRepository);
+
+        await storesRepository.update(id, { active: false });
+
+        return response.status(204).send();
+    }
 }

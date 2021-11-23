@@ -79,6 +79,8 @@ export default {
 
         const serviceOrder = await serviceOrdersRepository.findOneOrFail(id, {
             relations: [
+                'user',
+                'store',
                 'project',
             ]
         });

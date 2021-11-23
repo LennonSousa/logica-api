@@ -36,11 +36,27 @@ export class createIncomings1627910444821 implements MigrationInterface {
                         default: '(CURRENT_DATE)',
                     },
                     {
+                        name: 'created_by',
+                        type: 'varchar',
+                    },
+                    {
+                        name: 'store_id',
+                        type: 'varchar',
+                    },
+                    {
                         name: 'pay_type_id',
                         type: 'varchar',
                     },
                 ],
                 foreignKeys: [
+                    {
+                        name: 'StoreOnIncome',
+                        columnNames: ['store_id'],
+                        referencedTableName: 'stores',
+                        referencedColumnNames: ['id'],
+                        onUpdate: 'CASCADE',
+                        onDelete: 'RESTRICT',
+                    },
                     {
                         name: 'PayTypeOnIncome',
                         columnNames: ['pay_type_id'],

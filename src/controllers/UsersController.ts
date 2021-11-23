@@ -174,7 +174,7 @@ export default {
             document: Yup.string().required(),
             phone: Yup.string().notRequired().nullable(),
             paused: Yup.boolean().notRequired(),
-            store_only: Yup.boolean().notRequired(),
+            store_only: Yup.boolean().notRequired().nullable(),
             store: Yup.string().notRequired(),
         });
 

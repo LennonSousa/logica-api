@@ -2,7 +2,7 @@ import fs from 'fs';
 import multer from "multer";
 import path from 'path';
 
-type uploadType = "stores" | "projects" | "incomings";
+type uploadType = "notes" | "stores" | "projects" | "incomings";
 
 export function UploadsConfig(type: uploadType) {
     const config = {

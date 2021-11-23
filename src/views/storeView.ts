@@ -1,4 +1,4 @@
-import Store from '../models/StoreModel';
+import Store from '../models/StoresModel';
 
 export default {
     render(store: Store) {
@@ -21,6 +21,7 @@ export default {
             services_in: store.services_in,
             warranty: store.warranty,
             engineer: store.engineer,
+            active: store.active,
         }
     },
 
