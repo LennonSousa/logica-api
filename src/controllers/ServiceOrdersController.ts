@@ -96,7 +96,6 @@ export default {
         const serviceOrders: ServiceOrdersModel[] = await serviceOrdersRepository.find({
             where: whereConditions,
             relations: [
-                'status',
                 'store',
             ],
             order: {
