@@ -10,5 +10,6 @@ docker-compose.yml
 /uploads/stores/*
 
 !/uploads/projects/.gitkeep
+!/uploads/notes/.gitkeep
 !/uploads/incomings/.gitkeep
 !/uploads/stores/.gitkeep
