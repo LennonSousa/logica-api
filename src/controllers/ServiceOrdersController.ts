@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Between, getCustomRepository, Like } from 'typeorm';
+import { Between, FindConditions, getCustomRepository, Like } from 'typeorm';
 import * as Yup from 'yup';
 
 import serviceOrderView from '../views/serviceOrderView';
@@ -11,50 +11,94 @@ import ServiceOrdersModel from '../models/ServiceOrdersModel';
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
-        const { start, end, limit = 10, page = 1, customer } = request.query;
+        const { start, end, limit = 10, page = 1, customer, store } = request.query;
 
-        if (! await UsersRolesController.can(user_id, "services", "view"))
+        if (! await UsersRolesController.can(user_id, "services", "view") &&
+            ! await UsersRolesController.can(user_id, "services", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
 
         const serviceOrdersRepository = getCustomRepository(ServiceOrdersRepository);
 
-        let serviceOrders: ServiceOrdersModel[] = [];
-
-        if (start && end) {
-            serviceOrders = await serviceOrdersRepository.find({
-                where: { start_at: Between(start, end) },
-                order: {
-                    start_at: "DESC"
-                },
-                take: Number(limit),
-                skip: ((Number(page) - 1) * Number(limit)),
-            });
-
-            const totalPages = Math.ceil(serviceOrders.length / Number(limit));
-
-            response.header('X-Total-Pages', String(totalPages));
-
-            return response.json(serviceOrderView.renderMany(serviceOrders));
-        }
+        let whereConditions: FindConditions<ServiceOrdersModel>[] = [];
 
         if (customer) {
-            serviceOrders = await serviceOrdersRepository.find({
-                where: { customer: Like(`%${customer}%`) },
-                order: {
-                    start_at: "DESC"
+            if (userCreator.store_only)
+                whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                    user: {
+                        id: userCreator.id,
+                    },
+                    store: {
+                        id: userCreator.store.id,
+                    }
+                });
+            else {
+                if (store) whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                    store: {
+                        id: store as string,
+                    }
+                });
+                else whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                });
+            }
+        }
+        else {
+            if (userCreator.store_only) whereConditions.push({
+                user: {
+                    id: userCreator.id,
                 },
-                take: Number(limit),
-                skip: ((Number(page) - 1) * Number(limit)),
+                store: {
+                    id: userCreator.store.id,
+                }
             });
 
-            const totalPages = Math.ceil(serviceOrders.length / Number(limit));
-
-            response.header('X-Total-Pages', String(totalPages));
-
-            return response.json(serviceOrderView.renderMany(serviceOrders));
+            if (!userCreator.store_only && store) whereConditions.push({
+                store: {
+                    id: store as string,
+                }
+            });
         }
 
-        serviceOrders = await serviceOrdersRepository.find({
+        if (await UsersRolesController.can(user_id, "services", "view_self")) {
+            if (whereConditions.length > 0) {
+                whereConditions[0] = {
+                    ...whereConditions[0],
+                    user: {
+                        id: userCreator.id,
+                    },
+                }
+            }
+            else whereConditions.push({
+                user: {
+                    id: userCreator.id,
+                },
+            });
+        }
+
+        if (start && end) {
+            if (whereConditions.length > 0) {
+                whereConditions[0] = {
+                    ...whereConditions[0],
+                    start_at: Between(`${start} 00:00:00`, `${end} 23:59:59`)
+                }
+            }
+            else whereConditions.push({ start_at: Between(`${start} 00:00:00`, `${end} 23:59:59`) });
+        }
+
+        const serviceOrders: ServiceOrdersModel[] = await serviceOrdersRepository.find({
+            where: whereConditions,
+            relations: [
+                'status',
+                'store',
+            ],
             order: {
                 start_at: "DESC"
             },
@@ -72,8 +116,15 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "services", "view"))
+        if (! await UsersRolesController.can(user_id, "services", "view") &&
+            ! await UsersRolesController.can(user_id, "services", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
 
         const serviceOrdersRepository = getCustomRepository(ServiceOrdersRepository);
 
@@ -84,6 +135,9 @@ export default {
                 'project',
             ]
         });
+
+        if (userCreator.store_only && serviceOrder.store.id !== userCreator.store.id)
+            return response.status(403).send({ error: 'User permission not granted!' });
 
         return response.json(serviceOrderView.render(serviceOrder));
     },

@@ -1,18 +1,29 @@
 import { Request, Response } from 'express';
 import { getCustomRepository } from 'typeorm';
 import * as Yup from 'yup';
+import fs from 'fs';
 
 import noteAttachmentView from '../views/noteAttachmentView';
 import { NoteAttachmentsRepository } from '../repositories/NoteAttachmentsRepository';
-import UsersRolesController from './UsersRolesController';
 
 export default {
+    async show(request: Request, response: Response) {
+        const { id } = request.params;
+
+        const noteAttachmentsRepository = getCustomRepository(NoteAttachmentsRepository);
+
+        const noteAttachment = await noteAttachmentsRepository.findOneOrFail(id, {
+            relations: [
+                'note',
+            ]
+        });
+
+        const download = noteAttachmentView.renderDownload(noteAttachment);
+
+        return response.download(download.path);
+    },
+
     async create(request: Request, response: Response) {
-        const { user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "create"))
-            return response.status(403).send({ error: 'User permission not granted!' });
-
         const {
             title,
             note,
@@ -46,10 +57,7 @@ export default {
     },
 
     async update(request: Request, response: Response) {
-        const { id, user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "update"))
-            return response.status(403).send({ error: 'User permission not granted!' });
+        const { id } = request.params;
 
         const {
             title,
@@ -77,12 +85,25 @@ export default {
     },
 
     async delete(request: Request, response: Response) {
-        const { id, user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "remove"))
-            return response.status(403).send({ error: 'User permission not granted!' });
+        const { id } = request.params;
 
         const noteAttachmentsRepository = getCustomRepository(NoteAttachmentsRepository);
+
+        const noteAttachment = await noteAttachmentsRepository.findOneOrFail(id, {
+            relations: [
+                'note',
+            ]
+        });
+
+        try {
+            fs.rmSync(
+                `${process.env.UPLOADS_DIR}/notes/${noteAttachment.note.id}/${noteAttachment.path}`, {
+                maxRetries: 3
+            });
+        }
+        catch (err) {
+            console.error("> Error to remove file note attachment: ", err);
+        }
 
         await noteAttachmentsRepository.delete(id);
 

@@ -4,15 +4,9 @@ import * as Yup from 'yup';
 
 import noteShareView from '../views/noteShareView';
 import { NoteSharesRepository } from '../repositories/NoteSharesRepository';
-import UsersRolesController from './UsersRolesController';
 
 export default {
     async create(request: Request, response: Response) {
-        const { user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "create"))
-            return response.status(403).send({ error: 'User permission not granted!' });
-
         const {
             can_edit,
             note,
@@ -45,10 +39,7 @@ export default {
     },
 
     async update(request: Request, response: Response) {
-        const { id, user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "update"))
-            return response.status(403).send({ error: 'User permission not granted!' });
+        const { id } = request.params;
 
         const {
             can_edit,
@@ -77,10 +68,7 @@ export default {
     },
 
     async delete(request: Request, response: Response) {
-        const { id, user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "remove"))
-            return response.status(403).send({ error: 'User permission not granted!' });
+        const { id } = request.params;
 
         const noteSharesRepository = getCustomRepository(NoteSharesRepository);
 

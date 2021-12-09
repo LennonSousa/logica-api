@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Between, getCustomRepository, Like } from 'typeorm';
+import { Between, FindConditions, getCustomRepository, Like } from 'typeorm';
 import * as Yup from 'yup';
 
 import projectView from '../views/projectView';
@@ -7,82 +7,114 @@ import { ProjectsRepository } from '../repositories/ProjectsRepository';
 import { UsersRepository } from '../repositories/UsersRepository';
 import UsersRolesController from './UsersRolesController';
 import ProjectsModel from '../models/ProjectsModel';
+import notifications from '../modules/notifications';
 
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
-        const { start, end, limit = 10, page = 1, customer, user } = request.query;
+        const { start, end, limit = 10, page = 1, customer, store, status } = request.query;
 
-        if (! await UsersRolesController.can(user_id, "projects", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view") &&
+            ! await UsersRolesController.can(user_id, "projects", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
 
         const projectsRepository = getCustomRepository(ProjectsRepository);
 
-        let projects: ProjectsModel[] = [];
-
-        if (start && end) {
-            projects = await projectsRepository.find({
-                where: { updated_at: Between(start, end) },
-                relations: [
-                    'status',
-                ],
-                order: {
-                    updated_at: "DESC"
-                },
-                take: Number(limit),
-                skip: ((Number(page) - 1) * Number(limit)),
-            });
-
-            const totalPages = Math.ceil(projects.length / Number(limit));
-
-            response.header('X-Total-Pages', String(totalPages));
-
-            return response.json(projectView.renderMany(projects));
-        }
+        let whereConditions: FindConditions<ProjectsModel>[] = [];
 
         if (customer) {
-            projects = await projectsRepository.find({
-                where: { customer: Like(`%${customer}%`) },
-                relations: [
-                    'status',
-                ],
-                order: {
-                    created_at: "DESC"
+            if (userCreator.store_only)
+                whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                    seller: {
+                        id: userCreator.id,
+                    },
+                    store: {
+                        id: userCreator.store.id,
+                    }
+                });
+            else {
+                if (store) whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                    store: {
+                        id: store as string,
+                    }
+                });
+                else whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                });
+            }
+        }
+        else {
+            if (userCreator.store_only) whereConditions.push({
+                seller: {
+                    id: userCreator.id,
                 },
-                take: Number(limit),
-                skip: ((Number(page) - 1) * Number(limit)),
+                store: {
+                    id: userCreator.store.id,
+                }
             });
 
-            const totalPages = Math.ceil(projects.length / Number(limit));
-
-            response.header('X-Total-Pages', String(totalPages));
-
-            return response.json(projectView.renderMany(projects));
-        }
-
-        if (user) {
-            projects = await projectsRepository.find({
-                where: { user: Like(`%${user}%`) },
-                relations: [
-                    'status',
-                ],
-                order: {
-                    updated_at: "DESC"
-                },
-                take: Number(limit),
-                skip: ((Number(page) - 1) * Number(limit)),
+            if (!userCreator.store_only && store) whereConditions.push({
+                store: {
+                    id: store as string,
+                }
             });
-
-            const totalPages = Math.ceil(projects.length / Number(limit));
-
-            response.header('X-Total-Pages', String(totalPages));
-
-            return response.json(projectView.renderMany(projects));
         }
 
-        projects = await projectsRepository.find({
+        if (status) {
+            if (whereConditions.length > 0) {
+                whereConditions[0] = {
+                    ...whereConditions[0],
+                    status: {
+                        id: status as string,
+                    }
+                }
+            }
+            else whereConditions.push({
+                status: {
+                    id: status as string,
+                }
+            });
+        }
+
+        if (await UsersRolesController.can(user_id, "projects", "view_self")) {
+            if (whereConditions.length > 0) {
+                whereConditions[0] = {
+                    ...whereConditions[0],
+                    seller: {
+                        id: userCreator.id,
+                    },
+                }
+            }
+            else whereConditions.push({
+                seller: {
+                    id: userCreator.id,
+                },
+            });
+        }
+
+        if (start && end) {
+            if (whereConditions.length > 0) {
+                whereConditions[0] = {
+                    ...whereConditions[0],
+                    created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`)
+                }
+            }
+            else whereConditions.push({ created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`) });
+        }
+
+        const projects: ProjectsModel[] = await projectsRepository.find({
+            where: whereConditions,
             relations: [
                 'status',
+                'store',
             ],
             order: {
                 updated_at: "DESC"
@@ -101,8 +133,15 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "projects", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view") &&
+            ! await UsersRolesController.can(user_id, "projects", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
 
         const projectsRepository = getCustomRepository(ProjectsRepository);
 
@@ -123,6 +162,9 @@ export default {
                 'serviceOrders',
             ]
         });
+
+        if (userCreator.store_only && project.store.id !== userCreator.store.id)
+            return response.status(403).send({ error: 'User permission not granted!' });
 
         return response.json(projectView.render(project));
     },
@@ -310,6 +352,8 @@ export default {
 
         await projectsRepository.save(project);
 
+        notifications.newProjectVerify({ id: project.id });
+
         return response.status(201).json(projectView.render(project));
     },
 
@@ -368,6 +412,8 @@ export default {
         const userRepository = getCustomRepository(UsersRepository);
 
         const userCreator = await userRepository.findOneOrFail(user_id);
+
+        console.log(new Date());
 
         const data = {
             customer,

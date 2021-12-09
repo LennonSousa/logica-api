@@ -15,7 +15,7 @@ export default class NoteSharesModel {
     @JoinColumn({ name: 'note_id' })
     note: Note;
 
-    @ManyToOne(() => User, user => user.notes)
+    @ManyToOne(() => User, user => user.noteShares)
     @JoinColumn({ name: 'user_id' })
     user: User;
 }

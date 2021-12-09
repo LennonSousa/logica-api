@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { Between, getCustomRepository, Like } from 'typeorm';
+import { Between, FindConditions, getCustomRepository, Like } from 'typeorm';
 import * as Yup from 'yup';
 
+import notifications from '../modules/notifications';
 import estimateView from '../views/estimateView';
 import { EstimatesRepository } from '../repositories/EstimatesRepository';
 import { UsersRepository } from '../repositories/UsersRepository';
@@ -11,78 +12,91 @@ import EstimatesModel from '../models/EstimatesModel';
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
-        const { start, end, limit = 10, page = 1, customer, user } = request.query;
+        const { start, end, limit = 10, page = 1, customer, store } = request.query;
 
-        if (! await UsersRolesController.can(user_id, "estimates", "view"))
+        if (! await UsersRolesController.can(user_id, "estimates", "view") &&
+            ! await UsersRolesController.can(user_id, "estimates", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
 
         const estimatesRepository = getCustomRepository(EstimatesRepository);
 
-        let estimates: EstimatesModel[] = [];
-
-        if (start && end) {
-            estimates = await estimatesRepository.find({
-                where: { updated_at: Between(start, end) },
-                relations: [
-                    'status',
-                ],
-                order: {
-                    updated_at: "DESC"
-                },
-                take: Number(limit),
-                skip: ((Number(page) - 1) * Number(limit)),
-            });
-
-            const totalPages = Math.ceil(estimates.length / Number(limit));
-
-            response.header('X-Total-Pages', String(totalPages));
-
-            return response.json(estimateView.renderMany(estimates));
-        }
+        let whereConditions: FindConditions<EstimatesModel>[] = [];
 
         if (customer) {
-            estimates = await estimatesRepository.find({
-                where: { customer: Like(`%${customer}%`) },
-                relations: [
-                    'status',
-                ],
-                order: {
-                    created_at: "DESC"
+            if (userCreator.store_only) {
+                whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                    store: {
+                        id: userCreator.store.id,
+                    }
+                });
+            }
+            else {
+                if (store) whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                    store: {
+                        id: store as string,
+                    }
+                });
+                else whereConditions.push({
+                    customer: Like(`%${customer}%`),
+                });
+            }
+        }
+        else {
+            if (userCreator.store_only) whereConditions.push({
+                user: {
+                    id: userCreator.id,
                 },
-                take: Number(limit),
-                skip: ((Number(page) - 1) * Number(limit)),
+                store: {
+                    id: userCreator.store.id,
+                }
             });
 
-            const totalPages = Math.ceil(estimates.length / Number(limit));
-
-            response.header('X-Total-Pages', String(totalPages));
-
-            return response.json(estimateView.renderMany(estimates));
-        }
-
-        if (user) {
-            estimates = await estimatesRepository.find({
-                where: { user: Like(`%${user}%`) },
-                relations: [
-                    'status',
-                ],
-                order: {
-                    updated_at: "DESC"
-                },
-                take: Number(limit),
-                skip: ((Number(page) - 1) * Number(limit)),
+            if (!userCreator.store_only && store) whereConditions.push({
+                store: {
+                    id: store as string,
+                }
             });
-
-            const totalPages = Math.ceil(estimates.length / Number(limit));
-
-            response.header('X-Total-Pages', String(totalPages));
-
-            return response.json(estimateView.renderMany(estimates));
         }
 
-        estimates = await estimatesRepository.find({
+        if (await UsersRolesController.can(user_id, "estimates", "view_self")) {
+            if (whereConditions.length > 0) {
+                whereConditions[0] = {
+                    ...whereConditions[0],
+                    user: {
+                        id: userCreator.id,
+                    },
+                }
+            }
+            else whereConditions.push({
+                user: {
+                    id: userCreator.id,
+                },
+            });
+        }
+
+        if (start && end) {
+            if (whereConditions.length > 0) {
+                whereConditions[0] = {
+                    ...whereConditions[0],
+                    created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`)
+                }
+            }
+            else whereConditions.push({ created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`) });
+        }
+
+        const estimates: EstimatesModel[] = await estimatesRepository.find({
+            where: whereConditions,
             relations: [
                 'status',
+                'store',
             ],
             order: {
                 updated_at: "DESC"
@@ -101,8 +115,15 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "estimates", "view"))
+        if (! await UsersRolesController.can(user_id, "estimates", "view") &&
+            ! await UsersRolesController.can(user_id, "estimates", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
 
         const estimatesRepository = getCustomRepository(EstimatesRepository);
 
@@ -118,6 +139,9 @@ export default {
                 'items',
             ]
         });
+
+        if (userCreator.store_only && estimate.store.id !== userCreator.store.id)
+            return response.status(403).send({ error: 'User permission not granted!' });
 
         return response.json(estimateView.render(estimate));
     },
@@ -305,6 +329,13 @@ export default {
 
         await estimatesRepository.save(estimate);
 
+        notifications.estimateVerify(
+            {
+                id: estimate.id,
+                stageId: status,
+            }
+        );
+
         return response.status(201).json(estimateView.render(estimate));
     },
 
@@ -474,6 +505,13 @@ export default {
         const estimate = estimatesRepository.create(data);
 
         await estimatesRepository.update(id, estimate);
+
+        notifications.estimateVerify(
+            {
+                id: estimate.id,
+                stageId: status
+            }
+        );
 
         return response.status(204).json();
     },

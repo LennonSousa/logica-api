@@ -10,7 +10,8 @@ export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "projects", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view") &&
+            ! await UsersRolesController.can(user_id, "projects", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const attachmentsRequiredProjectRepository = getCustomRepository(AttachmentsRequiredProjectRepository);
@@ -27,7 +28,8 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "projects", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view") &&
+            ! await UsersRolesController.can(user_id, "projects", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const attachmentsRequiredProjectRepository = getCustomRepository(AttachmentsRequiredProjectRepository);

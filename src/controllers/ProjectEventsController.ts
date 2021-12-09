@@ -2,26 +2,32 @@ import { Request, Response } from 'express';
 import { getCustomRepository } from 'typeorm';
 import * as Yup from 'yup';
 
+import notifications from '../modules/notifications';
 import projectEventsView from '../views/projectEventView';
 import { ProjectEventsRepository } from '../repositories/ProjectEventsRepository';
 import UsersRolesController from './UsersRolesController';
 
 export default {
     async index(request: Request, response: Response) {
-        const { user_id } = request.params;
+        const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "projects", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view") &&
+            ! await UsersRolesController.can(user_id, "projects", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectEventsRepository = getCustomRepository(ProjectEventsRepository);
 
         const projectEvents = await projectEventsRepository.find({
+            where: {
+                project: {
+                    id
+                }
+            },
             order: {
                 done_at: "ASC"
             },
             relations: [
                 'event',
-                'project',
             ]
         });
 
@@ -31,7 +37,8 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "projects", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view") &&
+            ! await UsersRolesController.can(user_id, "projects", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectEventsRepository = getCustomRepository(ProjectEventsRepository);
@@ -82,11 +89,29 @@ export default {
             abortEarly: false,
         });
 
-        const projectEvents = projectEventsRepository.create(data);
+        const newProjectEvent = projectEventsRepository.create(data);
 
-        await projectEventsRepository.save(projectEvents);
+        await projectEventsRepository.save(newProjectEvent);
 
-        return response.status(201).json(projectEventsView.render(projectEvents));
+        if (done) {
+            const projectEvent = await projectEventsRepository.findOneOrFail(newProjectEvent.id, {
+                relations: [
+                    'event',
+                    'project',
+                ]
+            });
+
+            notifications.projectVerify(
+                {
+                    id: projectEvent.project.id,
+                    stageId: projectEvent.event.id,
+                    projectEvent,
+                    project: projectEvent.project,
+                }
+            );
+        }
+
+        return response.status(201).json(projectEventsView.render(newProjectEvent));
     },
 
     async update(request: Request, response: Response) {
@@ -118,6 +143,26 @@ export default {
         await schema.validate(data, {
             abortEarly: false,
         });
+
+        if (done) {
+            const projectEvent = await projectEventsRepository.findOneOrFail(id, {
+                relations: [
+                    'event',
+                    'project',
+                ]
+            });
+
+            if (!projectEvent.done) {
+                notifications.projectVerify(
+                    {
+                        id: projectEvent.project.id,
+                        stageId: projectEvent.event.id,
+                        projectEvent,
+                        project: projectEvent.project,
+                    }
+                );
+            }
+        }
 
         const projectEvents = projectEventsRepository.create(data);
 

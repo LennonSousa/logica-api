@@ -48,6 +48,36 @@ class Mailer {
         });
     }
 
+    async sendNotification(
+        groupName: string,
+        stageName: string,
+        customerName: string,
+        updatedAt: string,
+        email: string,
+        link: string
+    ) {
+        const variables = {
+            store_name: process.env.STORE_NAME,
+            group_name: groupName,
+            stage_name: stageName,
+            customer_name: customerName,
+            updated_at: updatedAt,
+            link,
+            current_year: getYear(new Date()),
+        }
+
+        const templatePath = resolve(__dirname, "..", "views", "emails", "notification.hbs");
+
+        const text = `Novo ${groupName} atualizado.`;
+
+        await this.execute(email, "Você tem uma nova notificação.", variables, templatePath, text).then(() => {
+            return true;
+        }).catch(err => {
+            console.log('Error to send notification e-mail: ', err);
+            return false
+        });
+    }
+
     async sendNewUserEmail(name: string, email: string, link: string) {
         const variables = {
             name,
@@ -64,71 +94,6 @@ class Mailer {
             return true;
         }).catch(err => {
             console.log('Error to send new user e-mail: ', err);
-            return false
-        });
-    }
-
-    async sendDailyNotificationEmail(
-        name: string,
-        email: string,
-        customerList: DocumentsListProps[],
-        licensingList: DocumentsListProps[],
-        projectList: DocumentsListProps[],
-        propertyList: DocumentsListProps[]
-    ) {
-        let documents = [];
-
-        if (customerList.length > 0) {
-            documents.push(
-                {
-                    category: "Clientes",
-                    documentList: customerList,
-                }
-            );
-        }
-
-        if (licensingList.length > 0) {
-            documents.push(
-                {
-                    category: "Licensiamentos",
-                    documentList: licensingList,
-                }
-            );
-        }
-
-        if (projectList.length > 0) {
-            documents.push(
-                {
-                    category: "Projetos",
-                    documentList: projectList,
-                }
-            );
-        }
-
-        if (propertyList.length > 0) {
-            documents.push(
-                {
-                    category: "Imóveis",
-                    documentList: propertyList,
-                }
-            );
-        }
-
-        const variables = {
-            store_name: process.env.STORE_NAME,
-            name,
-            documents,
-            current_year: getYear(new Date()),
-        }
-
-        const templatePath = resolve(__dirname, "..", "views", "emails", "dailyNotification.hbs");
-
-        const text = `Olá ${name}, Você tem documentos próximos de expirar.`;
-
-        await this.execute(email, "Documentos expirando.", variables, templatePath, text).then(() => {
-            return true;
-        }).catch(err => {
-            console.log('Error to send daily notification e-mail: ', err);
             return false
         });
     }

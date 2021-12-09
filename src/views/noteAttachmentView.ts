@@ -11,6 +11,12 @@ export default {
         }
     },
 
+    renderDownload(noteAttachment: NoteAttachment) {
+        return {
+            path: `${process.env.UPLOADS_DIR}/notes/${noteAttachment.note.id}/${noteAttachment.path}`,
+        }
+    },
+
     renderMany(attachments: NoteAttachment[]) {
         return attachments.map(attachment => this.render(attachment));
     }

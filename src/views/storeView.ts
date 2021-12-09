@@ -1,4 +1,5 @@
 import Store from '../models/StoresModel';
+import userView from './userView';
 
 export default {
     render(store: Store) {
@@ -22,6 +23,7 @@ export default {
             warranty: store.warranty,
             engineer: store.engineer,
             active: store.active,
+            users: store.users ? userView.renderMany(store.users) : [],
         }
     },
 

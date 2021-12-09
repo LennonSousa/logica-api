@@ -4,13 +4,32 @@ import * as Yup from 'yup';
 
 import storeView from '../views/storeView';
 import { StoresRepository } from '../repositories/StoresRepository';
+import { UsersRepository } from '../repositories/UsersRepository';
 import UsersRolesController from './UsersRolesController';
 
 export default {
-    async index(_request: Request, response: Response) {
+    async index(request: Request, response: Response) {
+        const { user_id } = request.params;
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
+
         const storeRepository = getCustomRepository(StoresRepository);
 
-        const stores = await storeRepository.find();
+        if (userCreator.store_only) {
+            const stores = await storeRepository.findOneOrFail(userCreator.store.id, {
+                relations: ['users']
+            });
+
+            return response.json(storeView.renderMany([stores]));
+        }
+
+        const stores = await storeRepository.find({
+            relations: ['users']
+        });
 
         return response.json(storeView.renderMany(stores));
     },
@@ -22,6 +41,18 @@ export default {
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const storeRepository = getCustomRepository(StoresRepository);
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
+
+        if (userCreator.store_only) {
+            const stores = await storeRepository.findOneOrFail(userCreator.store.id);
+
+            return response.json(storeView.render(stores));
+        }
 
         const store = await storeRepository.findOneOrFail(id);
 

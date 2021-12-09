@@ -32,6 +32,7 @@ import StoresController from '../controllers/StoresController';
 
 import usersAuthMiddleware from '../middlewares/usersAuth';
 import ServiceOrdersController from '../controllers/ServiceOrdersController';
+import NotificationsController from '../controllers/NotificationsController';
 
 const userAuthRoutes = express.Router();
 
@@ -105,13 +106,20 @@ userAuthRoutes.post('/notes', usersAuthMiddleware, NotesController.create);
 userAuthRoutes.put('/notes/:id', usersAuthMiddleware, NotesController.update);
 userAuthRoutes.delete('/notes/:id', usersAuthMiddleware, NotesController.delete);
 
-userAuthRoutes.post('/notes/attachments', usersAuthMiddleware, UploadsConfig('notes').single('file'), NoteAttachmentsController.create);
+userAuthRoutes.get('/notes/attachments/:id', usersAuthMiddleware, NoteAttachmentsController.show);
+userAuthRoutes.post('/notes/:id/attachments', usersAuthMiddleware, UploadsConfig('notes').single('file'), NoteAttachmentsController.create);
 userAuthRoutes.put('/notes/attachments/:id', usersAuthMiddleware, NoteAttachmentsController.update);
 userAuthRoutes.delete('/notes/attachments/:id', usersAuthMiddleware, NoteAttachmentsController.delete);
 
 userAuthRoutes.post('/notes/shares', usersAuthMiddleware, NoteSharesController.create);
 userAuthRoutes.put('/notes/shares/:id', usersAuthMiddleware, NoteSharesController.update);
 userAuthRoutes.delete('/notes/shares/:id', usersAuthMiddleware, NoteSharesController.delete);
+
+userAuthRoutes.get('/notifications', usersAuthMiddleware, NotificationsController.index);
+userAuthRoutes.get('/notifications/:id', usersAuthMiddleware, NotificationsController.show);
+userAuthRoutes.post('/notifications', usersAuthMiddleware, NotificationsController.create);
+userAuthRoutes.put('/notifications/:id', usersAuthMiddleware, NotificationsController.update);
+userAuthRoutes.delete('/notifications/:id', usersAuthMiddleware, NotificationsController.delete);
 
 userAuthRoutes.get('/panels/prices', usersAuthMiddleware, PanelPricesController.index);
 userAuthRoutes.get('/panels/prices/:id', usersAuthMiddleware, PanelPricesController.show);
@@ -141,7 +149,7 @@ userAuthRoutes.post('/projects/:id/attachments-required', usersAuthMiddleware, U
 userAuthRoutes.put('/projects/:id/attachments-required/:aid', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.update);
 userAuthRoutes.delete('/projects/attachments-required/:id', usersAuthMiddleware, ProjectAttachmentsRequiredController.delete);
 
-userAuthRoutes.get('/projects/events', usersAuthMiddleware, ProjectEventsController.index);
+userAuthRoutes.get('/projects/:id/events', usersAuthMiddleware, ProjectEventsController.index);
 userAuthRoutes.get('/projects/events/:id', usersAuthMiddleware, ProjectEventsController.show);
 userAuthRoutes.post('/projects/events', usersAuthMiddleware, ProjectEventsController.create);
 userAuthRoutes.put('/projects/events/:id', usersAuthMiddleware, ProjectEventsController.update);

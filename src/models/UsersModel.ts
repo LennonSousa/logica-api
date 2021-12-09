@@ -66,5 +66,5 @@ export default class UsersModel {
 
     @OneToMany(() => Share, share => share.user)
     @JoinColumn({ name: 'user_id' })
-    notes: Share[];
+    noteShares: Share[];
 }

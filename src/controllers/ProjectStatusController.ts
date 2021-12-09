@@ -7,12 +7,7 @@ import { ProjectStatusRepository } from '../repositories/ProjectStatusRepository
 import UsersRolesController from './UsersRolesController';
 
 export default {
-    async index(request: Request, response: Response) {
-        const { user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "projects", "view"))
-            return response.status(403).send({ error: 'User permission not granted!' });
-
+    async index(_request: Request, response: Response) {
         const projectStatusRepository = getCustomRepository(ProjectStatusRepository);
 
         const projectStatus = await projectStatusRepository.find({
@@ -27,7 +22,8 @@ export default {
     async show(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "projects", "view"))
+        if (! await UsersRolesController.can(user_id, "projects", "view") &&
+            ! await UsersRolesController.can(user_id, "projects", "view_self"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectStatusRepository = getCustomRepository(ProjectStatusRepository);

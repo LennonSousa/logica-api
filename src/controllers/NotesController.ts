@@ -5,31 +5,29 @@ import * as Yup from 'yup';
 import noteView from '../views/noteView';
 import { NotesRepository } from '../repositories/NotesRepository';
 import { UsersRepository } from '../repositories/UsersRepository';
-import UsersRolesController from './UsersRolesController';
 
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "notes", "view"))
-            return response.status(403).send({ error: 'User permission not granted!' });
+        const usersRepository = getCustomRepository(UsersRepository);
 
-        const notesRepository = getCustomRepository(NotesRepository);
-
-        const notes = await notesRepository.find({
-            order: {
-                updated_at: "DESC"
-            },
+        const user = await usersRepository.findOneOrFail(user_id, {
+            relations: [
+                'noteShares',
+                'noteShares.note',
+            ],
         });
+
+        const notes = user.noteShares.map(share => {
+            return share.note;
+        })
 
         return response.json(noteView.renderMany(notes));
     },
 
     async show(request: Request, response: Response) {
-        const { id, user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "view"))
-            return response.status(403).send({ error: 'User permission not granted!' });
+        const { id } = request.params;
 
         const notesRepository = getCustomRepository(NotesRepository);
 
@@ -37,6 +35,7 @@ export default {
             relations: [
                 'store',
                 'shares',
+                'shares.user',
                 'attachments',
             ]
         });
@@ -46,9 +45,6 @@ export default {
 
     async create(request: Request, response: Response) {
         const { user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "create"))
-            return response.status(403).send({ error: 'User permission not granted!' });
 
         const {
             title,
@@ -101,9 +97,6 @@ export default {
     async update(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "notes", "update"))
-            return response.status(403).send({ error: 'User permission not granted!' });
-
         const {
             title,
             text,
@@ -145,10 +138,7 @@ export default {
     },
 
     async delete(request: Request, response: Response) {
-        const { id, user_id } = request.params;
-
-        if (! await UsersRolesController.can(user_id, "notes", "remove"))
-            return response.status(403).send({ error: 'User permission not granted!' });
+        const { id } = request.params;
 
         const notesRepository = getCustomRepository(NotesRepository);
 

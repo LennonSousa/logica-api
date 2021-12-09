@@ -15,11 +15,13 @@ export default {
             updated_at: note.updated_at,
             store: note.store && storeView.render(note.store),
             shares: note.shares ? noteShareView.renderMany(note.shares) : [],
-            attachmetns: note.attachments ? noteAttachmentView.renderMany(note.attachments) : [],
+            attachments: note.attachments ? noteAttachmentView.renderMany(note.attachments) : [],
         }
     },
 
     renderMany(notes: Note[]) {
-        return notes.map(note => this.render(note));
+        const logsSorted = notes.sort((a, b) => b.updated_at.getTime() - a.updated_at.getTime());
+
+        return logsSorted.map(note => this.render(note));
     }
 }

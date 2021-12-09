@@ -1,26 +1,63 @@
 import { Request, Response } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { Between, FindConditions, getCustomRepository } from 'typeorm';
 import * as Yup from 'yup';
 
 import incomingsView from '../views/incomeView';
 import { IncomingsRepository } from '../repositories/IncomingsRepository';
 import { UsersRepository } from '../repositories/UsersRepository';
 import UsersRolesController from './UsersRolesController';
+import IncomingsModel from '../models/IncomingsModel';
 
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
+        const { start, end, limit = 10, page = 1, store } = request.query;
 
         if (! await UsersRolesController.can(user_id, "finances", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
+
         const incomingsRepository = getCustomRepository(IncomingsRepository);
 
-        const incomings = await incomingsRepository.find({
+        let whereConditions: FindConditions<IncomingsModel>[] = [];
+
+        if (userCreator.store_only) whereConditions.push({
+            store: {
+                id: userCreator.store.id,
+            }
+        });
+
+        if (!userCreator.store_only && store) whereConditions.push({
+            store: {
+                id: store as string,
+            }
+        });
+
+        if (start && end) {
+            if (whereConditions.length > 0) {
+                whereConditions[0] = {
+                    ...whereConditions[0],
+                    created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`)
+                }
+            }
+            else whereConditions.push({ created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`) });
+        }
+
+        const incomings: IncomingsModel[] = await incomingsRepository.find({
+            where: whereConditions,
+            relations: [
+                'items',
+            ],
             order: {
                 created_at: "ASC"
             },
-            relations: ['items']
+            take: Number(limit),
+            skip: ((Number(page) - 1) * Number(limit)),
         });
 
         return response.json(incomingsView.renderMany(incomings));
@@ -31,6 +68,12 @@ export default {
 
         if (! await UsersRolesController.can(user_id, "finances", "view"))
             return response.status(403).send({ error: 'User permission not granted!' });
+
+        const userRepository = getCustomRepository(UsersRepository);
+
+        const userCreator = await userRepository.findOneOrFail(user_id, {
+            relations: ['store'],
+        });
 
         const incomingsRepository = getCustomRepository(IncomingsRepository);
 
@@ -44,6 +87,9 @@ export default {
                 'attachments.income',
             ]
         });
+
+        if (userCreator.store_only && income.store.id !== userCreator.store.id)
+            return response.status(403).send({ error: 'User permission not granted!' });
 
         return response.json(incomingsView.render(income));
     },
