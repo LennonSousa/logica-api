@@ -27,11 +27,11 @@ export default {
     },
 
     async show(request: Request, response: Response) {
-        const { id } = request.params;
+        const { id, user_id } = request.params;
 
         const notesRepository = getCustomRepository(NotesRepository);
 
-        const notes = await notesRepository.findOneOrFail(id, {
+        const note = await notesRepository.findOneOrFail(id, {
             relations: [
                 'store',
                 'shares',
@@ -40,7 +40,10 @@ export default {
             ]
         });
 
-        return response.json(noteView.render(notes));
+        if (!note.shares.some(item => { return item.user.id === user_id }))
+            return response.status(403).send({ error: 'User permission not granted!' });
+
+        return response.json(noteView.render(note));
     },
 
     async create(request: Request, response: Response) {

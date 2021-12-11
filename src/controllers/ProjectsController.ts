@@ -166,6 +166,11 @@ export default {
         if (userCreator.store_only && project.store.id !== userCreator.store.id)
             return response.status(403).send({ error: 'User permission not granted!' });
 
+        if (await UsersRolesController.can(user_id, "projects", "view_self") &&
+            project.seller &&
+            project.seller.id !== userCreator.id)
+            return response.status(403).send({ error: 'User permission not granted!' });
+
         return response.json(projectView.render(project));
     },
 

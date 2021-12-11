@@ -138,6 +138,11 @@ export default {
         if (userCreator.store_only && serviceOrder.store.id !== userCreator.store.id)
             return response.status(403).send({ error: 'User permission not granted!' });
 
+        if (await UsersRolesController.can(user_id, "services", "view_self") &&
+            serviceOrder.user &&
+            serviceOrder.user.id !== userCreator.id)
+            return response.status(403).send({ error: 'User permission not granted!' });
+
         return response.json(serviceOrderView.render(serviceOrder));
     },
 
