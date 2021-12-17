@@ -22,6 +22,7 @@ export default {
             services_in: store.services_in,
             warranty: store.warranty,
             engineer: store.engineer,
+            bank_account: store.bank_account,
             active: store.active,
             users: store.users ? userView.renderMany(store.users) : [],
         }

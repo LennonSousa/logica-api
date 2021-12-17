@@ -65,6 +65,9 @@ export default class StoresModel {
     @Column()
     active: boolean;
 
+    @Column()
+    bank_account: string;
+
     @OneToMany(() => Estimate, estimate => estimate.store)
     @JoinColumn({ name: 'store_id' })
     estimates: Estimate[];

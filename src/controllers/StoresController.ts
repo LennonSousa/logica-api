@@ -82,6 +82,7 @@ export default {
             services_in,
             warranty,
             engineer,
+            bank_account,
         } = request.body;
 
         const storeRepository = getCustomRepository(StoresRepository);
@@ -109,6 +110,7 @@ export default {
             services_in,
             warranty,
             engineer,
+            bank_account,
         };
 
         const schema = Yup.object().shape({
@@ -129,6 +131,7 @@ export default {
             services_in: Yup.string().notRequired().nullable(),
             warranty: Yup.string().notRequired().nullable(),
             engineer: Yup.string().notRequired().nullable(),
+            bank_account: Yup.string().notRequired().nullable(),
         });
 
         await schema.validate(data, {
@@ -165,6 +168,7 @@ export default {
             services_in,
             warranty,
             engineer,
+            bank_account,
         } = request.body;
 
         const storeRepository = getCustomRepository(StoresRepository);
@@ -190,6 +194,7 @@ export default {
                 services_in,
                 warranty,
                 engineer,
+                bank_account,
             };
 
             const schema = Yup.object().shape({
@@ -210,6 +215,7 @@ export default {
                 services_in: Yup.string().notRequired().nullable(),
                 warranty: Yup.string().notRequired().nullable(),
                 engineer: Yup.string().notRequired().nullable(),
+                bank_account: Yup.string().notRequired().nullable(),
             });
 
             await schema.validate(data, {
@@ -240,6 +246,7 @@ export default {
             services_in,
             warranty,
             engineer,
+            bank_account,
         };
 
         const schema = Yup.object().shape({
@@ -259,6 +266,7 @@ export default {
             services_in: Yup.string().notRequired().nullable(),
             warranty: Yup.string().notRequired().nullable(),
             engineer: Yup.string().notRequired().nullable(),
+            bank_account: Yup.string().notRequired().nullable(),
         });
 
         await schema.validate(data, {

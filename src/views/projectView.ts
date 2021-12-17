@@ -7,6 +7,7 @@ import projectAttachmentRequiredView from './projectAttachmentRequiredView';
 import projectAttachmentView from './projectAttachmentView';
 import incomeView from './incomeView';
 import serviceOrderView from './serviceOrderView';
+import itemView from './projectItemView';
 
 export default {
     render(project: Project) {
@@ -63,6 +64,7 @@ export default {
             attachments: project.attachments ? projectAttachmentView.renderMany(project.attachments) : [],
             incomings: project.incomings ? incomeView.renderMany(project.incomings) : [],
             serviceOrder: project.serviceOrders ? serviceOrderView.renderMany(project.serviceOrders) : [],
+            items: project.items ? itemView.renderMany(project.items) : [],
         }
     },
 
