@@ -8,6 +8,7 @@ import AttachmentRequired from './ProjectAttachmentsRequiredModel';
 import Attachment from './ProjectAttachmentsModel';
 import Income from './IncomingsModel';
 import ServiceOrder from './ServiceOrdersModel';
+import ProjectItem from './ProjectItemsModel';
 
 @Entity('projects')
 export default class ProjectsModel {
@@ -178,4 +179,10 @@ export default class ProjectsModel {
     @OneToMany(() => ServiceOrder, serviceOrder => serviceOrder.project)
     @JoinColumn({ name: 'project_id' })
     serviceOrders: ServiceOrder[];
+
+    @OneToMany(() => ProjectItem, item => item.project, {
+        cascade: ['insert', 'update']
+    })
+    @JoinColumn({ name: 'project_id' })
+    items: ProjectItem[];
 }

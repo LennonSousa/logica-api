@@ -160,6 +160,7 @@ export default {
                 'incomings',
                 'incomings.items',
                 'serviceOrders',
+                'items',
             ]
         });
 
@@ -222,7 +223,8 @@ export default {
             financier_state,
             store,
             status,
-            events
+            events,
+            items,
         } = request.body;
 
         const projectsRepository = getCustomRepository(ProjectsRepository);
@@ -275,6 +277,7 @@ export default {
             seller: userCreator,
             status,
             events,
+            items,
             created_by: userCreator.name,
             updated_by: userCreator.name,
         };
@@ -345,6 +348,15 @@ export default {
                             received_at: Yup.date().notRequired(),
                         })
                     ),
+                })
+            ),
+            items: Yup.array(
+                Yup.object().shape({
+                    name: Yup.string().required(),
+                    amount: Yup.number().required(),
+                    price: Yup.number().required(),
+                    percent: Yup.number().required(),
+                    order: Yup.number().required(),
                 })
             ),
         });
