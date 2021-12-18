@@ -23,8 +23,9 @@ import PanelsController from '../controllers/PanelsController';
 import PayTypesController from '../controllers/PayTypesController';
 import ProjectAttachmentsController from '../controllers/ProjectAttachmentsController';
 import ProjectAttachmentsRequiredController from '../controllers/ProjectAttachmentsRequiredController';
-import ProjectEventsController from '../controllers/ProjectEventsController';
 import ProjectsController from '../controllers/ProjectsController';
+import ProjectEventsController from '../controllers/ProjectEventsController';
+import ProjectItemsController from '../controllers/ProjectItemsController';
 import ProjectStatusController from '../controllers/ProjectStatusController';
 import RoofOrientationsController from '../controllers/RoofOrientationsController';
 import RoofTypesController from '../controllers/RoofTypesController';
@@ -154,6 +155,8 @@ userAuthRoutes.get('/projects/events/:id', usersAuthMiddleware, ProjectEventsCon
 userAuthRoutes.post('/projects/events', usersAuthMiddleware, ProjectEventsController.create);
 userAuthRoutes.put('/projects/events/:id', usersAuthMiddleware, ProjectEventsController.update);
 userAuthRoutes.delete('/projects/events/:id', usersAuthMiddleware, ProjectEventsController.delete);
+
+userAuthRoutes.put('/projects/items/:id', usersAuthMiddleware, ProjectItemsController.update);
 
 userAuthRoutes.get('/projects/status', usersAuthMiddleware, ProjectStatusController.index);
 userAuthRoutes.get('/projects/status/:id', usersAuthMiddleware, ProjectStatusController.show);
