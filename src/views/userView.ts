@@ -14,6 +14,7 @@ export default {
             paused: user.paused,
             root: user.root,
             store_only: user.store_only,
+            discountLimit: user.discountLimit,
             store: user.store && storeView.render(user.store),
             created_at: user.created_at,
             roles: user.roles ? userRoleView.renderMany(user.roles) : [],
