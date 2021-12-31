@@ -67,7 +67,7 @@ class Mailer {
             current_year: getYear(new Date()),
         }
 
-        const templatePath = resolve(__dirname, "..", "views", "emails", "notification.hbs");
+        const templatePath = resolve(__dirname, "..", "templates", "emails", "notification.hbs");
 
         const text = `Novo ${groupName} atualizado.`;
 
@@ -87,7 +87,7 @@ class Mailer {
             current_year: getYear(new Date()),
         }
 
-        const templatePath = resolve(__dirname, "..", "views", "emails", "newUser.hbs");
+        const templatePath = resolve(__dirname, "..", "templates", "emails", "newUser.hbs");
 
         const text = `Bem-vindo a plataforma gerenciamento ${process.env.STORE_NAME}.`;
 
@@ -107,7 +107,7 @@ class Mailer {
             current_year: getYear(new Date()),
         }
 
-        const templatePath = resolve(__dirname, "..", "views", "emails", "resetUserPassword.hbs");
+        const templatePath = resolve(__dirname, "..", "templates", "emails", "resetUserPassword.hbs");
 
         const text = `Recebemos a sua solicitação para trocar a sua senha.`;
 
@@ -126,7 +126,7 @@ class Mailer {
             current_year: getYear(new Date()),
         }
 
-        const templatePath = resolve(__dirname, "..", "views", "emails", "confirmedResetUserPassword.hbs");
+        const templatePath = resolve(__dirname, "..", "templates", "emails", "confirmedResetUserPassword.hbs");
 
         const text = `A sua senha de acesso ao aplicativo foi alterada.`;
 

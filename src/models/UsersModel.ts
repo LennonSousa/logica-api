@@ -43,6 +43,9 @@ export default class UsersModel {
     @JoinColumn({ name: 'store_id' })
     store: Store;
 
+    @Column({ name: 'discount_limit' })
+    discountLimit: number;
+
     @Column()
     created_at: Date;
 

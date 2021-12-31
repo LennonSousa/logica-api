@@ -62,6 +62,7 @@ export default {
             phone,
             email,
             store_only,
+            discountLimit,
             store,
             roles
         } = request.body;
@@ -74,6 +75,7 @@ export default {
             phone,
             email,
             store_only,
+            discountLimit,
             store,
             roles
         };
@@ -84,6 +86,7 @@ export default {
             phone: Yup.string().notRequired(),
             email: Yup.string().required(),
             store_only: Yup.boolean().notRequired(),
+            discountLimit: Yup.number().notRequired(),
             store: Yup.string().notRequired(),
             roles: Yup.array(
                 Yup.object().shape({
@@ -114,6 +117,7 @@ export default {
             active: false,
             paused: false,
             store_only,
+            discountLimit,
             store,
             roles
         });
@@ -155,6 +159,7 @@ export default {
             phone,
             paused,
             store_only,
+            discountLimit,
             store,
         } = request.body;
 
@@ -166,6 +171,7 @@ export default {
             phone,
             paused,
             store_only,
+            discountLimit,
             store,
         };
 
@@ -175,6 +181,7 @@ export default {
             phone: Yup.string().notRequired().nullable(),
             paused: Yup.boolean().notRequired(),
             store_only: Yup.boolean().notRequired().nullable(),
+            discountLimit: Yup.number().notRequired(),
             store: Yup.string().notRequired(),
         });
 

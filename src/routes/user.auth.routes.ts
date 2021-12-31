@@ -84,7 +84,11 @@ userAuthRoutes.put('/events/project/:id', usersAuthMiddleware, EventsProjectCont
 userAuthRoutes.delete('/events/project/:id', usersAuthMiddleware, EventsProjectController.delete);
 
 userAuthRoutes.get('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.show);
-userAuthRoutes.post('/incomings/:id/attachments', usersAuthMiddleware, UploadsConfig('incomings').single('file'), IncomeAttachmentsController.create);
+userAuthRoutes.post(
+    '/incomings/:id/attachments',
+    usersAuthMiddleware, UploadsConfig('incomings').single('file'),
+    IncomeAttachmentsController.create
+);
 userAuthRoutes.put('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.update);
 userAuthRoutes.delete('/incomings/attachments/:id', usersAuthMiddleware, IncomeAttachmentsController.delete);
 
@@ -107,7 +111,12 @@ userAuthRoutes.put('/notes/:id', usersAuthMiddleware, NotesController.update);
 userAuthRoutes.delete('/notes/:id', usersAuthMiddleware, NotesController.delete);
 
 userAuthRoutes.get('/notes/attachments/:id', usersAuthMiddleware, NoteAttachmentsController.show);
-userAuthRoutes.post('/notes/:id/attachments', usersAuthMiddleware, UploadsConfig('notes').single('file'), NoteAttachmentsController.create);
+userAuthRoutes.post(
+    '/notes/:id/attachments',
+    usersAuthMiddleware,
+    UploadsConfig('notes').single('file'
+    ),
+    NoteAttachmentsController.create);
 userAuthRoutes.put('/notes/attachments/:id', usersAuthMiddleware, NoteAttachmentsController.update);
 userAuthRoutes.delete('/notes/attachments/:id', usersAuthMiddleware, NoteAttachmentsController.delete);
 
@@ -140,13 +149,28 @@ userAuthRoutes.put('/payments/types/:id', usersAuthMiddleware, PayTypesControlle
 userAuthRoutes.delete('/payments/types/:id', usersAuthMiddleware, PayTypesController.delete);
 
 userAuthRoutes.get('/projects/attachments/:id', usersAuthMiddleware, ProjectAttachmentsController.show);
-userAuthRoutes.post('/projects/:id/attachments', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsController.create);
+userAuthRoutes.post(
+    '/projects/:id/attachments',
+    usersAuthMiddleware,
+    UploadsConfig('projects').single('file'),
+    ProjectAttachmentsController.create
+);
 userAuthRoutes.put('/projects/attachments/:id', usersAuthMiddleware, ProjectAttachmentsController.update);
 userAuthRoutes.delete('/projects/attachments/:id', usersAuthMiddleware, ProjectAttachmentsController.delete);
 
 userAuthRoutes.get('/projects/attachments-required/:id', usersAuthMiddleware, ProjectAttachmentsRequiredController.show);
-userAuthRoutes.post('/projects/:id/attachments-required', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.create);
-userAuthRoutes.put('/projects/:id/attachments-required/:aid', usersAuthMiddleware, UploadsConfig('projects').single('file'), ProjectAttachmentsRequiredController.update);
+userAuthRoutes.post(
+    '/projects/:id/attachments-required',
+    usersAuthMiddleware,
+    UploadsConfig('projects').single('file'),
+    ProjectAttachmentsRequiredController.create
+);
+userAuthRoutes.put(
+    '/projects/:id/attachments-required/:id',
+    usersAuthMiddleware,
+    UploadsConfig('projects').single('file'),
+    ProjectAttachmentsRequiredController.update
+);
 userAuthRoutes.delete('/projects/attachments-required/:id', usersAuthMiddleware, ProjectAttachmentsRequiredController.delete);
 
 userAuthRoutes.get('/projects/:id/events', usersAuthMiddleware, ProjectEventsController.index);
@@ -187,8 +211,18 @@ userAuthRoutes.delete('/services/orders/:id', usersAuthMiddleware, ServiceOrders
 
 userAuthRoutes.get('/stores', usersAuthMiddleware, StoresController.index);
 userAuthRoutes.get('/stores/:id', usersAuthMiddleware, StoresController.show);
-userAuthRoutes.post('/stores', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoresController.create);
-userAuthRoutes.put('/stores/:id', usersAuthMiddleware, UploadsConfig('stores').single('avatar'), StoresController.update);
+userAuthRoutes.post(
+    '/stores',
+    usersAuthMiddleware,
+    UploadsConfig('stores').single('avatar'),
+    StoresController.create
+);
+userAuthRoutes.put(
+    '/stores/:id',
+    usersAuthMiddleware,
+    UploadsConfig('stores').single('avatar'),
+    StoresController.update
+);
 userAuthRoutes.delete('/stores/:id', usersAuthMiddleware, StoresController.delete);
 
 export default userAuthRoutes;
