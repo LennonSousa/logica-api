@@ -60,6 +60,10 @@ export default {
             skip: ((Number(page) - 1) * Number(limit)),
         });
 
+        const totalPages = Math.ceil(incomings.length / Number(limit));
+
+        response.header('X-Total-Pages', String(totalPages));
+
         return response.json(incomingsView.renderMany(incomings));
     },
 
@@ -72,7 +76,9 @@ export default {
         const userRepository = getCustomRepository(UsersRepository);
 
         const userCreator = await userRepository.findOneOrFail(user_id, {
-            relations: ['store'],
+            relations: [
+                'store'
+            ],
         });
 
         const incomingsRepository = getCustomRepository(IncomingsRepository);
