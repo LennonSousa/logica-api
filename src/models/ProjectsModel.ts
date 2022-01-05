@@ -170,7 +170,7 @@ export default class ProjectsModel {
     @JoinColumn({ name: 'project_id' })
     attachments: Attachment[];
 
-    @OneToMany(() => Income, incomeAttachmentView => incomeAttachmentView.project, {
+    @OneToMany(() => Income, income => income.project, {
         cascade: ['insert', 'update']
     })
     @JoinColumn({ name: 'project_id' })
