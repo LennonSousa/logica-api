@@ -27,7 +27,7 @@ export default class IncomingsModel {
     @JoinColumn({ name: 'store_id' })
     store: Store;
 
-    @ManyToOne(() => Project, project => project.attachments)
+    @ManyToOne(() => Project, project => project.incomings)
     @JoinColumn({ name: 'project_id' })
     project: Project;
 

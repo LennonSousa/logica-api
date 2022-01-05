@@ -507,16 +507,24 @@ export default {
             abortEarly: false,
         });
 
+        const oldEstimate = await estimatesRepository.findOne(id, {
+            relations: [
+                'status',
+            ]
+        });
+
         const estimate = estimatesRepository.create(data);
 
         await estimatesRepository.update(id, estimate);
 
-        notifications.estimateVerify(
-            {
-                id: estimate.id,
-                stageId: status
-            }
-        );
+        if (oldEstimate.status.id !== status) {
+            notifications.estimateVerify(
+                {
+                    id: estimate.id,
+                    stageId: status
+                }
+            );
+        }
 
         return response.status(204).json();
     },

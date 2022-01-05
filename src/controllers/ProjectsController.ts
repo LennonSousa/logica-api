@@ -8,6 +8,8 @@ import { UsersRepository } from '../repositories/UsersRepository';
 import UsersRolesController from './UsersRolesController';
 import ProjectsModel from '../models/ProjectsModel';
 import notifications from '../modules/notifications';
+import IncomingsModel from '../models/IncomingsModel';
+import { IncomingsRepository } from '../repositories/IncomingsRepository';
 
 export default {
     async index(request: Request, response: Response) {
@@ -225,9 +227,11 @@ export default {
             status,
             events,
             items,
+            incomings,
         } = request.body;
 
         const projectsRepository = getCustomRepository(ProjectsRepository);
+        const incomingsRepository = getCustomRepository(IncomingsRepository);
 
         const userRepository = getCustomRepository(UsersRepository);
 
@@ -334,22 +338,6 @@ export default {
                     event: Yup.string().required(),
                 })
             ),
-            incomings: Yup.array(
-                Yup.object().shape({
-                    description: Yup.string().required(),
-                    value: Yup.number().required(),
-                    project: Yup.boolean().notRequired(),
-                    pay_type: Yup.string().required(),
-                    items: Yup.array(
-                        Yup.object().shape({
-                            description: Yup.string().required(),
-                            value: Yup.number().required(),
-                            is_paid: Yup.boolean().notRequired(),
-                            received_at: Yup.date().notRequired(),
-                        })
-                    ),
-                })
-            ),
             items: Yup.array(
                 Yup.object().shape({
                     name: Yup.string().required(),
@@ -365,9 +353,40 @@ export default {
             abortEarly: false,
         });
 
+        const incomeSchema = Yup.array(
+            Yup.object().shape({
+                description: Yup.string().required(),
+                value: Yup.number().required(),
+                payType: Yup.string().required(),
+                items: Yup.array(
+                    Yup.object().shape({
+                        description: Yup.string().required(),
+                        value: Yup.number().required(),
+                        is_paid: Yup.boolean().notRequired(),
+                        received_at: Yup.date().notRequired(),
+                    })
+                ),
+            })
+        );
+
+        await incomeSchema.validate(incomings, {
+            abortEarly: false,
+        });
+
         const project = projectsRepository.create(data);
 
         await projectsRepository.save(project);
+
+        const incomingsItems: IncomingsModel[] = incomings;
+
+        incomingsItems.forEach(async income => {
+            const newIncome = incomingsRepository.create({
+                ...income,
+                project: project.id as any
+            });
+
+            await incomingsRepository.save(newIncome);
+        });
 
         notifications.newProjectVerify({ id: project.id });
 
@@ -429,8 +448,6 @@ export default {
         const userRepository = getCustomRepository(UsersRepository);
 
         const userCreator = await userRepository.findOneOrFail(user_id);
-
-        console.log(new Date());
 
         const data = {
             customer,
