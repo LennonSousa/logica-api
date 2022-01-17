@@ -39,6 +39,7 @@ export default {
             ],
             relations: [
                 'roles',
+                'store',
             ]
         });
 
