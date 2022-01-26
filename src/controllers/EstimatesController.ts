@@ -520,7 +520,7 @@ export default {
         if (oldEstimate.status.id !== status) {
             notifications.estimateVerify(
                 {
-                    id: estimate.id,
+                    id,
                     stageId: status
                 }
             );
