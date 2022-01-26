@@ -10,9 +10,6 @@ export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "finances", "view"))
-            return response.status(403).send({ error: 'User permission not granted!' });
-
         const payTypesRepository = getCustomRepository(PayTypesRepository);
 
         const payTypes = await payTypesRepository.find({
