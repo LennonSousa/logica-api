@@ -12,7 +12,15 @@ import EstimatesModel from '../models/EstimatesModel';
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
-        const { customer, store, user, start, end, limit = 10, page = 1 } = request.query;
+        const {
+            customer,
+            store,
+            user,
+            start,
+            end,
+            limit = 10,
+            page = 1
+        } = request.query;
 
         if (! await UsersRolesController.can(user_id, "estimates", "view") &&
             ! await UsersRolesController.can(user_id, "estimates", "view_self"))
@@ -107,7 +115,6 @@ export default {
                 }
             }
         }
-
 
         if (start && end) {
             if (whereConditions) {

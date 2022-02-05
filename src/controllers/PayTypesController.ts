@@ -7,9 +7,7 @@ import { PayTypesRepository } from '../repositories/PayTypesRepository';
 import UsersRolesController from './UsersRolesController';
 
 export default {
-    async index(request: Request, response: Response) {
-        const { user_id } = request.params;
-
+    async index(_request: Request, response: Response) {
         const payTypesRepository = getCustomRepository(PayTypesRepository);
 
         const payTypes = await payTypesRepository.find({

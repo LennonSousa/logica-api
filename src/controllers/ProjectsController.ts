@@ -14,7 +14,16 @@ import { IncomingsRepository } from '../repositories/IncomingsRepository';
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
-        const { start, end, limit = 10, page = 1, customer, store, status } = request.query;
+        const {
+            start,
+            end,
+            limit = 10,
+            page = 1,
+            customer,
+            store,
+            status,
+            user
+        } = request.query;
 
         if (! await UsersRolesController.can(user_id, "projects", "view") &&
             ! await UsersRolesController.can(user_id, "projects", "view_self"))
@@ -28,88 +37,112 @@ export default {
 
         const projectsRepository = getCustomRepository(ProjectsRepository);
 
-        let whereConditions: FindConditions<ProjectsModel>[] = [];
+        let whereConditions: FindConditions<ProjectsModel> = {};
 
         if (customer) {
-            if (userCreator.store_only)
-                whereConditions.push({
-                    customer: Like(`%${customer}%`),
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
+                    customer: Like(`%${customer}%`)
+                }
+            }
+            else whereConditions = { customer: Like(`%${customer}%`) };
+        }
+
+        if (!userCreator.store_only) {
+            if (store) {
+                if (whereConditions) {
+                    whereConditions = {
+                        ...whereConditions,
+                        store: {
+                            id: store as string,
+                        },
+                    }
+                }
+                else whereConditions = {
+                    store: {
+                        id: store as string,
+                    },
+                }
+            }
+
+            if (user) {
+                whereConditions = {
+                    ...whereConditions,
+                    seller: {
+                        id: user as string,
+                    },
+                }
+            }
+        } else if (await UsersRolesController.can(user_id, "projects", "view_self")) {
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
+                    store: {
+                        id: userCreator.store.id,
+                    },
                     seller: {
                         id: userCreator.id,
                     },
-                    store: {
-                        id: userCreator.store.id,
-                    }
-                });
-            else {
-                if (store) whereConditions.push({
-                    customer: Like(`%${customer}%`),
-                    store: {
-                        id: store as string,
-                    }
-                });
-                else whereConditions.push({
-                    customer: Like(`%${customer}%`),
-                });
+                }
             }
-        }
-        else {
-            if (userCreator.store_only) whereConditions.push({
+            else whereConditions = {
+                store: {
+                    id: userCreator.store.id,
+                },
                 seller: {
                     id: userCreator.id,
                 },
+            }
+        } else {
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
+                    store: {
+                        id: userCreator.store.id,
+                    },
+                }
+            }
+            else whereConditions = {
                 store: {
                     id: userCreator.store.id,
-                }
-            });
+                },
+            }
 
-            if (!userCreator.store_only && store) whereConditions.push({
-                store: {
-                    id: store as string,
+            if (user) {
+                whereConditions = {
+                    ...whereConditions,
+                    seller: {
+                        id: user as string,
+                    },
                 }
-            });
+            }
         }
 
         if (status) {
-            if (whereConditions.length > 0) {
-                whereConditions[0] = {
-                    ...whereConditions[0],
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
                     status: {
                         id: status as string,
                     }
                 }
             }
-            else whereConditions.push({
+            else whereConditions = {
                 status: {
                     id: status as string,
                 }
-            });
-        }
-
-        if (await UsersRolesController.can(user_id, "projects", "view_self")) {
-            if (whereConditions.length > 0) {
-                whereConditions[0] = {
-                    ...whereConditions[0],
-                    seller: {
-                        id: userCreator.id,
-                    },
-                }
-            }
-            else whereConditions.push({
-                seller: {
-                    id: userCreator.id,
-                },
-            });
+            };
         }
 
         if (start && end) {
-            if (whereConditions.length > 0) {
-                whereConditions[0] = {
-                    ...whereConditions[0],
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
                     created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`)
                 }
             }
-            else whereConditions.push({ created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`) });
+            else whereConditions = { created_at: Between(`${start} 00:00:00`, `${end} 23:59:59`) };
         }
 
         const projects: ProjectsModel[] = await projectsRepository.find({
@@ -125,7 +158,11 @@ export default {
             skip: ((Number(page) - 1) * Number(limit)),
         });
 
-        const totalPages = Math.ceil(projects.length / Number(limit));
+        const totalItems = await projectsRepository.count({
+            where: whereConditions
+        });
+
+        const totalPages = Math.ceil(totalItems / Number(limit));
 
         response.header('X-Total-Pages', String(totalPages));
 
