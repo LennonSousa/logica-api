@@ -11,7 +11,15 @@ import ServiceOrdersModel from '../models/ServiceOrdersModel';
 export default {
     async index(request: Request, response: Response) {
         const { user_id } = request.params;
-        const { start, end, limit = 10, page = 1, customer, store } = request.query;
+        const {
+            customer,
+            store,
+            user,
+            start,
+            end,
+            limit = 10,
+            page = 1
+        } = request.query;
 
         if (! await UsersRolesController.can(user_id, "services", "view") &&
             ! await UsersRolesController.can(user_id, "services", "view_self"))
@@ -25,72 +33,96 @@ export default {
 
         const serviceOrdersRepository = getCustomRepository(ServiceOrdersRepository);
 
-        let whereConditions: FindConditions<ServiceOrdersModel>[] = [];
+        let whereConditions: FindConditions<ServiceOrdersModel> = {};
 
         if (customer) {
-            if (userCreator.store_only)
-                whereConditions.push({
-                    customer: Like(`%${customer}%`),
-                    user: {
-                        id: userCreator.id,
-                    },
-                    store: {
-                        id: userCreator.store.id,
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
+                    customer: Like(`%${customer}%`)
+                }
+            }
+            else whereConditions = { customer: Like(`%${customer}%`) };
+        }
+
+        if (!userCreator.store_only) {
+            if (store) {
+                if (whereConditions) {
+                    whereConditions = {
+                        ...whereConditions,
+                        store: {
+                            id: store as string,
+                        },
                     }
-                });
-            else {
-                if (store) whereConditions.push({
-                    customer: Like(`%${customer}%`),
+                }
+                else whereConditions = {
                     store: {
                         id: store as string,
-                    }
-                });
-                else whereConditions.push({
-                    customer: Like(`%${customer}%`),
-                });
+                    },
+                }
             }
-        }
-        else {
-            if (userCreator.store_only) whereConditions.push({
-                user: {
-                    id: userCreator.id,
-                },
-                store: {
-                    id: userCreator.store.id,
-                }
-            });
 
-            if (!userCreator.store_only && store) whereConditions.push({
-                store: {
-                    id: store as string,
+            if (user) {
+                whereConditions = {
+                    ...whereConditions,
+                    user: {
+                        id: user as string,
+                    },
                 }
-            });
-        }
-
-        if (await UsersRolesController.can(user_id, "services", "view_self")) {
-            if (whereConditions.length > 0) {
-                whereConditions[0] = {
-                    ...whereConditions[0],
+            }
+        } else if (await UsersRolesController.can(user_id, "services", "view_self")) {
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
+                    store: {
+                        id: userCreator.store.id,
+                    },
                     user: {
                         id: userCreator.id,
                     },
                 }
             }
-            else whereConditions.push({
+            else whereConditions = {
+                store: {
+                    id: userCreator.store.id,
+                },
                 user: {
                     id: userCreator.id,
                 },
-            });
+            }
+        } else {
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
+                    store: {
+                        id: userCreator.store.id,
+                    },
+                }
+            }
+            else whereConditions = {
+                store: {
+                    id: userCreator.store.id,
+                },
+            }
+
+            if (user) {
+                whereConditions = {
+                    ...whereConditions,
+                    user: {
+                        id: user as string,
+                    },
+                }
+            }
         }
 
         if (start && end) {
-            if (whereConditions.length > 0) {
-                whereConditions[0] = {
-                    ...whereConditions[0],
+            if (whereConditions) {
+                whereConditions = {
+                    ...whereConditions,
                     start_at: Between(`${start} 00:00:00`, `${end} 23:59:59`)
                 }
             }
-            else whereConditions.push({ start_at: Between(`${start} 00:00:00`, `${end} 23:59:59`) });
+            else whereConditions = { start_at: Between(`${start} 00:00:00`, `${end} 23:59:59`) };
         }
 
         const serviceOrders: ServiceOrdersModel[] = await serviceOrdersRepository.find({
@@ -105,7 +137,11 @@ export default {
             skip: ((Number(page) - 1) * Number(limit)),
         });
 
-        const totalPages = Math.ceil(serviceOrders.length / Number(limit));
+        const totalItems = await serviceOrdersRepository.count({
+            where: whereConditions
+        });
+
+        const totalPages = Math.ceil(totalItems / Number(limit));
 
         response.header('X-Total-Pages', String(totalPages));
 
