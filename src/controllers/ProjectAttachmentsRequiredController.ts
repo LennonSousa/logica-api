@@ -94,7 +94,7 @@ export default {
     },
 
     async update(request: Request, response: Response) {
-        const { aid, user_id } = request.params;
+        const { attachmentId, user_id } = request.params;
 
         if (! await UsersRolesController.can(user_id, "projects", "update"))
             return response.status(403).send({ error: 'User permission not granted!' });
@@ -124,7 +124,7 @@ export default {
 
             const projectAttachmentRequired = projectAttachmentsRequiredRepository.create(data);
 
-            await projectAttachmentsRequiredRepository.update(aid, projectAttachmentRequired);
+            await projectAttachmentsRequiredRepository.update(attachmentId, projectAttachmentRequired);
 
             return response.status(204).json();
         }
@@ -143,7 +143,7 @@ export default {
 
         const projectAttachmentRequired = projectAttachmentsRequiredRepository.create(data);
 
-        await projectAttachmentsRequiredRepository.update(aid, projectAttachmentRequired);
+        await projectAttachmentsRequiredRepository.update(attachmentId, projectAttachmentRequired);
 
         return response.status(204).json();
     },
@@ -151,7 +151,7 @@ export default {
     async delete(request: Request, response: Response) {
         const { id, user_id } = request.params;
 
-        if (! await UsersRolesController.can(user_id, "projects", "remove"))
+        if (! await UsersRolesController.can(user_id, "projects", "update"))
             return response.status(403).send({ error: 'User permission not granted!' });
 
         const projectAttachmentsRequiredRepository = getCustomRepository(ProjectAttachmentsRequiredRepository);

@@ -150,8 +150,7 @@ userAuthRoutes.put('/payments/types/:id', usersAuthMiddleware, PayTypesControlle
 userAuthRoutes.delete('/payments/types/:id', usersAuthMiddleware, PayTypesController.delete);
 
 userAuthRoutes.get('/projects/attachments/:id', usersAuthMiddleware, ProjectAttachmentsController.show);
-userAuthRoutes.post(
-    '/projects/:id/attachments',
+userAuthRoutes.post('/projects/attachments',
     usersAuthMiddleware,
     UploadsConfig('projects').single('file'),
     ProjectAttachmentsController.create
@@ -167,7 +166,7 @@ userAuthRoutes.post(
     ProjectAttachmentsRequiredController.create
 );
 userAuthRoutes.put(
-    '/projects/:id/attachments-required/:id',
+    '/projects/:id/attachments-required/:attachmentId',
     usersAuthMiddleware,
     UploadsConfig('projects').single('file'),
     ProjectAttachmentsRequiredController.update
