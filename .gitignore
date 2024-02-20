@@ -13,3 +13,4 @@ docker-compose.yml
 !/uploads/notes/.gitkeep
 !/uploads/incomings/.gitkeep
 !/uploads/stores/.gitkeep
+.env.production
